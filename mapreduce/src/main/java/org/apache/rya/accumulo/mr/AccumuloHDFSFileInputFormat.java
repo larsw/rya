@@ -37,7 +37,6 @@ import org.apache.accumulo.core.data.Value;
 import org.apache.accumulo.core.file.FileSKVIterator;
 import org.apache.accumulo.core.file.rfile.RFileOperations;
 import org.apache.accumulo.core.security.Authorizations;
-import org.apache.accumulo.core.util.ArgumentChecker;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BlockLocation;
 import org.apache.hadoop.fs.FileStatus;
@@ -68,8 +67,12 @@ public class AccumuloHDFSFileInputFormat extends FileInputFormat<Key, Value> {
         String user = MRUtils.AccumuloProps.getUsername(jobContext);
         AuthenticationToken password = MRUtils.AccumuloProps.getPassword(jobContext);
         String table = MRUtils.AccumuloProps.getTablename(jobContext);
-        ArgumentChecker.notNull(instance);
-        ArgumentChecker.notNull(table);
+        if (instance == null) {
+            throw new IllegalArgumentException("instance");
+        }
+        if (table == null) {
+            throw new IllegalArgumentException("table");
+        }
 
         //find the files necessary
         try {

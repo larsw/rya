@@ -34,5 +34,4 @@ public class ProvenanceCollectionException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 }

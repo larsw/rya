@@ -103,9 +103,14 @@ import org.eclipse.rdf4j.query.algebra.evaluation.impl.SameTermFilterOptimizer;
 import org.eclipse.rdf4j.query.impl.EmptyBindingSet;
 import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.helpers.AbstractSailConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfiguration> extends AbstractSailConnection {
     private final RdfCloudTripleStore<C> store;
+
+    private static final Logger logger = LoggerFactory.getLogger(RdfCloudTripleStoreConnection.class);
+
 
     private RdfEvalStatsDAO<C> rdfEvalStatsDAO;
     private SelectivityEvalDAO<C> selectEvalDAO;
