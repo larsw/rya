@@ -20,11 +20,13 @@ package org.eclipse.rdf4j.query.algebra.evaluation.function.geosparql;
 
 import java.io.IOException;
 
-import com.spatial4j.core.context.SpatialContext;
-import com.spatial4j.core.context.jts.JtsSpatialContext;
-import com.spatial4j.core.shape.Shape;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTWriter;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
+import org.locationtech.spatial4j.context.jts.JtsSpatialContext;
+import org.locationtech.spatial4j.shape.Shape;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.io.WKTWriter;
+import org.locationtech.spatial4j.context.SpatialContext;
 
 /**
  * See https://bitbucket.org/pulquero/sesame-geosparql-jts
@@ -51,6 +53,11 @@ public class SpatialSupportInitializer extends SpatialSupport {
 
         public JtsSpatialAlgebra(JtsSpatialContext context) {
             this.context = context;
+        }
+
+        @Override
+        public Shape buffer(Shape shape, double v) {
+            return null;
         }
 
         @Override
@@ -94,9 +101,14 @@ public class SpatialSupportInitializer extends SpatialSupport {
         }
 
         @Override
-        public boolean equals(Shape s1, Shape s2) {
-            return context.getGeometryFrom(s1).equalsNorm(context.getGeometryFrom(s2));
+        public boolean sfEquals(Shape shape, Shape shape1) {
+            return false;
         }
+
+//        @Override
+//        public boolean equals(Shape s1, Shape s2) {
+//            return context.getGeometryFrom(s1).equalsNorm(context.getGeometryFrom(s2));
+//        }
 
         @Override
         public boolean sfDisjoint(Shape s1, Shape s2) {
@@ -151,6 +163,11 @@ public class SpatialSupportInitializer extends SpatialSupport {
             } else {
                 return false;
             }
+        }
+
+        @Override
+        public boolean ehEquals(Shape shape, Shape shape1) {
+            return false;
         }
 
         @Override
@@ -221,6 +238,11 @@ public class SpatialSupportInitializer extends SpatialSupport {
         @Override
         public boolean rcc8ntppi(Shape s1, Shape s2) {
             return relate(s1, s2, "TTTFFTFFT");
+        }
+
+        @Override
+        public boolean rcc8eq(Shape shape, Shape shape1) {
+            return false;
         }
 
     }
