@@ -1140,47 +1140,6 @@ under the License.
                     <artifactId>jaxb2-maven-plugin</artifactId>
                     <version>2.3.1</version>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.apache.rat
-                                        </groupId>
-                                        <artifactId>
-                                            apache-rat-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [0.11,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>check</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-               <plugin>
-                    <!-- Apache Release Audit Tool - reports missing license headers and other issues. -->
-                    <groupId>org.apache.rat</groupId>
-                    <artifactId>apache-rat-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>DEPENDENCIES</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <!-- Used for auditing dependency licenses for releases. -->
                     <groupId>org.codehaus.mojo</groupId>
@@ -1216,20 +1175,6 @@ under the License.
 <!--               <groupId>org.codehaus.mojo</groupId>-->
 <!--               <artifactId>animal-sniffer-maven-plugin</artifactId>-->
 <!--           </plugin>-->
-           <plugin>
-                <!-- Apache Release Audit Tool - reports missing license headers and other issues. -->
-                <!-- Note: Add exclusions to deepest maven submodule/project in the plug-in management section -->
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>check-licenses</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>

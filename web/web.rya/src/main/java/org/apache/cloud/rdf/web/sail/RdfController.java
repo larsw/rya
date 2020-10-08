@@ -323,11 +323,12 @@ public class RdfController {
     }
 
     @RequestMapping(value = "/loadrdf", method = RequestMethod.POST)
-    public void loadRdf(@RequestParam(required = false) final String format,
+    public void loadRdf(
+            @RequestParam(required = false) final String format,
             @RequestParam(value = RdfCloudTripleStoreConfiguration.CONF_CV, required = false) final String cv,
             @RequestParam(required = false) final String graph,
-                        @RequestBody final String body,
-                        final HttpServletResponse response)
+            @RequestBody final String body,
+            final HttpServletResponse response)
             throws RepositoryException, IOException, RDFParseException {
         RDFFormat format_r = RDFFormat.RDFXML;
         if (format != null) {
