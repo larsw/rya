@@ -30,9 +30,8 @@ import org.apache.rya.accumulo.AccumuloRdfConfiguration;
 import org.apache.rya.accumulo.AccumuloRyaDAO;
 import org.apache.rya.api.RdfCloudTripleStoreConstants;
 import org.apache.rya.rdftriplestore.RdfCloudTripleStore;
-import org.eclipse.rdf4j.model.Namespace;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.ValueFactory;
+import org.apache.rya.rdftriplestore.RdfCloudTripleStoreConnection;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -69,13 +68,14 @@ public class RdfCloudTripleStoreTest extends TestCase {
     private static final long START = 1309532965000l;
     private static final long END = 1310566686000l;
     private Connector connector;
+    private RdfCloudTripleStoreConnection<AccumuloRdfConfiguration> storeConnection;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         connector = new MockInstance().getConnector("", "");
 
-        RdfCloudTripleStore sail = new RdfCloudTripleStore();
+        RdfCloudTripleStore sail = new RdfCloudTripleStore<AccumuloRdfConfiguration>();
         AccumuloRdfConfiguration conf = new AccumuloRdfConfiguration();
         conf.setTablePrefix("lubm_");
         sail.setConf(conf);
@@ -85,8 +85,9 @@ public class RdfCloudTripleStoreTest extends TestCase {
         sail.setRyaDAO(crdfdao);
 
         repository = new SailRepository(sail);
-        repository.initialize();
         connection = repository.getConnection();
+
+        storeConnection = new RdfCloudTripleStoreConnection<AccumuloRdfConfiguration>(sail, conf, SimpleValueFactory.getInstance());
 
         loadData();
     }
@@ -226,6 +227,16 @@ public class RdfCloudTripleStoreTest extends TestCase {
 //        Scanner sc = connector.createScanner("lubm_spo", Constants.NO_AUTHS);
 //        for (Map.Entry<Key, Value> aSc : sc) System.out.println(aSc.getKey().getRow());
 //    }
+    static String litdupsNS = "urn:test:litdups#";
+    IRI cpu = VF.createIRI(litdupsNS, "cpu");
+
+    public void  testFoo() throws Exception {
+        IRI loadPerc = VF.createIRI(litdupsNS, "loadPerc");
+        Triple object = VF.createTriple(VF.createIRI(litdupsNS, "fuu"), VF.createIRI(litdupsNS, "bar"), VF.createLiteral("baz"));
+        storeConnection.begin();
+        storeConnection.addStatement(object, loadPerc, cpu);
+        storeConnection.commit();
+    }
 
     public void testNamespace() throws Exception {
         String namespace = "urn:testNamespace#";

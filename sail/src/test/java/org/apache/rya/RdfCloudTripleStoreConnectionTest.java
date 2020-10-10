@@ -34,11 +34,7 @@ import org.apache.rya.rdftriplestore.RdfCloudTripleStore;
 import org.apache.rya.rdftriplestore.RyaSailRepository;
 import org.apache.rya.rdftriplestore.inference.InferenceEngine;
 import org.apache.rya.rdftriplestore.namespace.NamespaceManager;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -89,6 +85,17 @@ public class RdfCloudTripleStoreConnectionTest extends TestCase {
 	public void tearDown() throws Exception {
         super.tearDown();
         repository.shutDown();
+    }
+
+    public void testAddRdfStarStatement() throws Exception {
+        RepositoryConnection conn = repository.getConnection();
+
+        IRI loadPerc = VF.createIRI(litdupsNS, "loadPerc");
+        Triple object = VF.createTriple(VF.createIRI(litdupsNS, "fuu"), VF.createIRI(litdupsNS, "bar"), VF.createLiteral("baz"));
+        //IRI uri1 = VF.createIRI(litdupsNS, "uri1");
+        conn.add(cpu, loadPerc, object);
+        conn.commit();
+
     }
 
     public void testAddStatement() throws Exception {

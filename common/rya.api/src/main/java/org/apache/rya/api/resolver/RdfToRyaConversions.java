@@ -30,13 +30,11 @@ import org.apache.rya.api.domain.RyaStatement;
 import org.apache.rya.api.domain.RyaType;
 import org.apache.rya.api.domain.RyaTypeRange;
 import org.apache.rya.api.log.LogUtils;
-import org.eclipse.rdf4j.model.BNode;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Literals;
+import org.eclipse.rdf4j.model.util.Statements;
+
+import java.util.List;
 
 /**
  * Methods for converting values from their RDF4J object representations into
@@ -144,6 +142,7 @@ public class RdfToRyaConversions {
         if (statement == null) {
             return null;
         }
+
         final Resource subject = statement.getSubject();
         final IRI predicate = statement.getPredicate();
         final Value object = statement.getObject();

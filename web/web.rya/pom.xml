@@ -62,6 +62,16 @@ under the License.
             <artifactId>rdf4j-queryresultio-sparqljson</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-hadoop</artifactId>
@@ -116,7 +126,29 @@ under the License.
 			<artifactId>mockito-all</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.apache.accumulo</groupId>
+            <artifactId>accumulo-minicluster</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--            <version>2.3.4.RELEASE</version>-->
+<!--        </dependency>-->
+    </dependencies>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                &lt;!&ndash; Import dependency management from Spring Boot &ndash;&gt;-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-dependencies</artifactId>-->
+<!--                <version>2.3.4.RELEASE</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 	<build>
 		<finalName>web.rya</finalName>
 		<resources>
@@ -133,12 +165,22 @@ under the License.
 			</resource>
 		</resources>
 		<plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <version>2.3.4.RELEASE</version>-->
+<!--            </plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<!-- Use the web.xml that was filtered in the resources section. -->
 					<webXml>${project.build.directory}/web.xml</webXml>
+                    <packagingExcludes>
+                        WEB-INF/lib/*jsp*.jar,
+                        WEB-INF/lib/servlet*.jar,
+                        WEB-INF/lib/jasper*.jar
+                    </packagingExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -193,29 +235,29 @@ under the License.
                 <database.implementation>mongodb</database.implementation>
             </properties>
         </profile>
-        <profile>
-            <id>geoindexing</id>
-            <properties>
-                <db.specified>true</db.specified>
-                <database.implementation>mongodb-geo</database.implementation>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.rya</groupId>
-                    <artifactId>rya.geo.geowave</artifactId>
-                    <!-- GeoWave brings in org.springframework jars that are not compatible with web.rya versions -->
-                    <exclusions>
-                        <exclusion>
-                            <groupId>mil.nga.giat</groupId>
-                            <artifactId>geowave-datastore-accumulo</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>mil.nga.giat</groupId>
-                            <artifactId>geowave-adapter-vector</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
+<!--        <profile>-->
+<!--            <id>geoindexing</id>-->
+<!--            <properties>-->
+<!--                <db.specified>true</db.specified>-->
+<!--                <database.implementation>mongodb-geo</database.implementation>-->
+<!--            </properties>-->
+<!--            <dependencies>-->
+<!--                <dependency>-->
+<!--                    <groupId>org.apache.rya</groupId>-->
+<!--                    <artifactId>rya.geo.geowave</artifactId>-->
+<!--                    &lt;!&ndash; GeoWave brings in org.springframework jars that are not compatible with web.rya versions &ndash;&gt;-->
+<!--                    <exclusions>-->
+<!--                        <exclusion>-->
+<!--                            <groupId>mil.nga.giat</groupId>-->
+<!--                            <artifactId>geowave-datastore-accumulo</artifactId>-->
+<!--                        </exclusion>-->
+<!--                        <exclusion>-->
+<!--                            <groupId>mil.nga.giat</groupId>-->
+<!--                            <artifactId>geowave-adapter-vector</artifactId>-->
+<!--                        </exclusion>-->
+<!--                    </exclusions>-->
+<!--                </dependency>-->
+<!--            </dependencies>-->
+<!--        </profile>-->
 	</profiles>
 </project>

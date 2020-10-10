@@ -41,17 +41,7 @@ import org.apache.rya.rdftriplestore.RdfCloudTripleStoreConnection;
 import org.apache.rya.rdftriplestore.utils.RdfFormatUtils;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.MalformedQueryException;
-import org.eclipse.rdf4j.query.QueryEvaluationException;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.QueryResultHandlerException;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResultHandler;
-import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
-import org.eclipse.rdf4j.query.Update;
-import org.eclipse.rdf4j.query.UpdateExecutionException;
+import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.parser.ParsedGraphQuery;
 import org.eclipse.rdf4j.query.parser.ParsedOperation;
 import org.eclipse.rdf4j.query.parser.ParsedTupleQuery;
@@ -69,6 +59,7 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.rdfxml.RDFXMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,6 +78,7 @@ public class RdfController {
 
     private static final int QUERY_TIME_OUT_SECONDS = 120;
 
+    @Qualifier("sailRepo")
     @Autowired
     SailRepository repository;
 
@@ -102,6 +94,7 @@ public class RdfController {
                          @RequestParam(value = RdfCloudTripleStoreConfiguration.CONF_RESULT_FORMAT, required = false) final String emit,
                          @RequestParam(value = "padding", required = false) final String padding,
                          @RequestParam(value = "callback", required = false) final String callback,
+                         @RequestParam(value = "reify", required = false) final Boolean reify,
                          final HttpServletRequest request,
                          final HttpServletResponse response) {
         // WARNING: if you add to the above request variables,
@@ -178,12 +171,7 @@ public class RdfController {
 
     private void performQuery(final String query, final RepositoryConnection conn, final String auth, final String infer, final String nullout, final TupleQueryResultHandler handler) throws RepositoryException, MalformedQueryException, QueryEvaluationException, TupleQueryResultHandlerException {
         final TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, query);
-        if (auth != null && auth.length() > 0) {
-            tupleQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH, VALUE_FACTORY.createLiteral(auth));
-        }
-        if (infer != null && infer.length() > 0) {
-            tupleQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(Boolean.parseBoolean(infer)));
-        }
+        initAuthorizationsAndInference(auth, infer, tupleQuery);
         if (nullout != null && nullout.length() > 0) {
             //output nothing, but still run query
             tupleQuery.evaluate(new TupleQueryResultHandler() {
@@ -220,12 +208,7 @@ public class RdfController {
 
     private void performGraphQuery(final String query, final RepositoryConnection conn, final String auth, final String infer, final String nullout, final RDFHandler handler) throws RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException {
         final GraphQuery graphQuery = conn.prepareGraphQuery(QueryLanguage.SPARQL, query);
-        if (auth != null && auth.length() > 0) {
-            graphQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH, VALUE_FACTORY.createLiteral(auth));
-        }
-        if (infer != null && infer.length() > 0) {
-            graphQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(Boolean.parseBoolean(infer)));
-        }
+        initAuthorizationsAndInference(auth, infer, graphQuery);
         if (nullout != null && nullout.length() > 0) {
             //output nothing, but still run query
             // TODO this seems like a strange use case.
@@ -260,6 +243,16 @@ public class RdfController {
         }
 
     }
+
+    private void initAuthorizationsAndInference(String auth, String infer, Query graphQuery) {
+        if (auth != null && auth.length() > 0) {
+            graphQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH, VALUE_FACTORY.createLiteral(auth));
+        }
+        if (infer != null && infer.length() > 0) {
+            graphQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(Boolean.parseBoolean(infer)));
+        }
+    }
+
     private void performUpdate(final String query, final SailRepositoryConnection conn, final ServletOutputStream os, final String infer, final String vis) throws RepositoryException, MalformedQueryException, IOException {
         final Update update = conn.prepareUpdate(QueryLanguage.SPARQL, query);
         if (infer != null && infer.length() > 0) {

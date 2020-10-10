@@ -18,23 +18,11 @@
  */
 package org.apache.rya.rdftriplestore;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.lang.reflect.Constructor;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-
 import org.apache.hadoop.conf.Configurable;
 import org.apache.rya.api.RdfCloudTripleStoreConfiguration;
 import org.apache.rya.api.RdfCloudTripleStoreConstants;
-import org.apache.rya.api.domain.RyaStatement;
 import org.apache.rya.api.domain.RyaIRI;
+import org.apache.rya.api.domain.RyaStatement;
 import org.apache.rya.api.domain.StatementMetadata;
 import org.apache.rya.api.persist.RdfEvalStatsDAO;
 import org.apache.rya.api.persist.RyaDAO;
@@ -42,41 +30,17 @@ import org.apache.rya.api.persist.RyaDAOException;
 import org.apache.rya.api.persist.joinselect.SelectivityEvalDAO;
 import org.apache.rya.api.persist.utils.RyaDAOHelper;
 import org.apache.rya.api.resolver.RdfToRyaConversions;
-import org.apache.rya.rdftriplestore.evaluation.FilterRangeVisitor;
-import org.apache.rya.rdftriplestore.evaluation.ParallelEvaluationStrategyImpl;
 import org.apache.rya.rdftriplestore.evaluation.QueryJoinOptimizer;
-import org.apache.rya.rdftriplestore.evaluation.QueryJoinSelectOptimizer;
-import org.apache.rya.rdftriplestore.evaluation.RdfCloudTripleStoreEvaluationStatistics;
-import org.apache.rya.rdftriplestore.evaluation.RdfCloudTripleStoreSelectivityEvaluationStatistics;
-import org.apache.rya.rdftriplestore.evaluation.SeparateFilterJoinsVisitor;
-import org.apache.rya.rdftriplestore.inference.AllValuesFromVisitor;
-import org.apache.rya.rdftriplestore.inference.DomainRangeVisitor;
-import org.apache.rya.rdftriplestore.inference.HasSelfVisitor;
-import org.apache.rya.rdftriplestore.inference.HasValueVisitor;
-import org.apache.rya.rdftriplestore.inference.InferenceEngine;
-import org.apache.rya.rdftriplestore.inference.IntersectionOfVisitor;
-import org.apache.rya.rdftriplestore.inference.InverseOfVisitor;
-import org.apache.rya.rdftriplestore.inference.OneOfVisitor;
-import org.apache.rya.rdftriplestore.inference.PropertyChainVisitor;
-import org.apache.rya.rdftriplestore.inference.ReflexivePropertyVisitor;
-import org.apache.rya.rdftriplestore.inference.SameAsVisitor;
-import org.apache.rya.rdftriplestore.inference.SomeValuesFromVisitor;
-import org.apache.rya.rdftriplestore.inference.SubClassOfVisitor;
-import org.apache.rya.rdftriplestore.inference.SubPropertyOfVisitor;
-import org.apache.rya.rdftriplestore.inference.SymmetricPropertyVisitor;
-import org.apache.rya.rdftriplestore.inference.TransitivePropertyVisitor;
+import org.apache.rya.rdftriplestore.evaluation.*;
+import org.apache.rya.rdftriplestore.inference.*;
 import org.apache.rya.rdftriplestore.namespace.NamespaceManager;
 import org.apache.rya.rdftriplestore.provenance.ProvenanceCollectionException;
 import org.apache.rya.rdftriplestore.provenance.ProvenanceCollector;
 import org.apache.rya.rdftriplestore.utils.DefaultStatistics;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Namespace;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.Statements;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.Dataset;
@@ -89,22 +53,20 @@ import org.eclipse.rdf4j.query.algebra.evaluation.EvaluationStrategy;
 import org.eclipse.rdf4j.query.algebra.evaluation.QueryBindingSet;
 import org.eclipse.rdf4j.query.algebra.evaluation.QueryOptimizer;
 import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.BindingAssigner;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.CompareOptimizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.ConjunctiveConstraintSplitter;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.ConstantOptimizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.DisjunctiveConstraintOptimizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.EvaluationStatistics;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.FilterOptimizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.IterativeEvaluationOptimizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.OrderLimitOptimizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.QueryModelNormalizer;
-import org.eclipse.rdf4j.query.algebra.evaluation.impl.SameTermFilterOptimizer;
+import org.eclipse.rdf4j.query.algebra.evaluation.impl.*;
 import org.eclipse.rdf4j.query.impl.EmptyBindingSet;
 import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.helpers.AbstractSailConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Constructor;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfiguration> extends AbstractSailConnection {
     private final RdfCloudTripleStore<C> store;
@@ -161,24 +123,35 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
             final List<RyaStatement> ryaStatements = new ArrayList<>();
             if (contexts != null && contexts.length > 0) {
                 for (final Resource context : contexts) {
-                    final RyaStatement statement = new RyaStatement(
-                            RdfToRyaConversions.convertResource(subject),
-                            RdfToRyaConversions.convertIRI(predicate),
-                            RdfToRyaConversions.convertValue(object),
-                            RdfToRyaConversions.convertResource(context),
-                            null, new StatementMetadata(), cv);
+                    final List<Statement> list = new ArrayList<>();
+                    Statements.create(SimpleValueFactory.getInstance(), subject, predicate, object, list);
 
-                    ryaStatements.add(statement);
+                    for (final Statement stmt : list) {
+                        Statements.convertRDFStarToReification(stmt, x -> {
+                            final RyaStatement ryaStatement = new RyaStatement(
+                                    RdfToRyaConversions.convertResource(x.getSubject()),
+                                    RdfToRyaConversions.convertIRI(x.getPredicate()),
+                                    RdfToRyaConversions.convertValue(x.getObject()),
+                                    RdfToRyaConversions.convertResource(x.getContext()),
+                                    null, new StatementMetadata(), cv);
+                            ryaStatements.add(ryaStatement);
+                        });
+                    }
                 }
             } else {
-                final RyaStatement statement = new RyaStatement(
-                        RdfToRyaConversions.convertResource(subject),
-                        RdfToRyaConversions.convertIRI(predicate),
-                        RdfToRyaConversions.convertValue(object),
-                        null, null, new StatementMetadata(), cv);
+                final List<Statement> list = new ArrayList<>();
+                Statements.create(SimpleValueFactory.getInstance(), subject, predicate, object, list);
 
-                ryaStatements.add(statement);
-            }
+                for (final Statement stmt : list) {
+                    Statements.convertRDFStarToReification(stmt, statement -> {
+                        final RyaStatement ryaStatement = new RyaStatement(
+                                RdfToRyaConversions.convertResource(statement.getSubject()),
+                                RdfToRyaConversions.convertIRI(statement.getPredicate()),
+                                RdfToRyaConversions.convertValue(statement.getObject()),
+                                null, null, new StatementMetadata(), cv);
+                        ryaStatements.add(ryaStatement);
+                    });
+                }            }
             ryaDAO.add(ryaStatements.iterator());
         } catch (final RyaDAOException e) {
             throw new SailException(e);

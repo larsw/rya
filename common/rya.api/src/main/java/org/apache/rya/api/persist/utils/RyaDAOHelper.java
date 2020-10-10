@@ -37,6 +37,10 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.DynamicModel;
+import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 
@@ -92,7 +96,13 @@ public class RyaDAOHelper {
                     if (next == null) {
                         return null;
                     }
+//                    DynamicModel model = new DynamicModel(new DynamicModelFactory());
+//                    model.add(RyaToRdfConversions.convertStatement(next));
+//                    Models.convertReificationToRDFStar(SimpleValueFactory.getInstance(), model, x -> {
+//
+//                    });
                     return RyaToRdfConversions.convertStatement(next);
+
                 } catch (RyaDAOException e) {
                     throw new QueryEvaluationException(e);
                 }

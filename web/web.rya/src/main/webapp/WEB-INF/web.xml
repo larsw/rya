@@ -24,6 +24,20 @@ under the License.
 
 <web-app>
     <display-name>RDF Cloud Triple Store Web Access</display-name>
+
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+        <init-param>
+            <param-name>cors.allowed.origins</param-name>
+            <param-value>${cors.allowed.origins}</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>springrdf</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -40,127 +54,4 @@ under the License.
         <servlet-name>springrdf</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    <!--<servlet>-->
-    <!--<servlet-name>LoadDataServlet</servlet-name>-->
-    <!--<servlet-class>org.apache.cloud.rdf.web.cloudbase.sail.LoadDataServlet</servlet-class>-->
-
-    <!--<init-param>-->
-    <!--<param-name>rts.instance</param-name>-->
-    <!--<param-value>stratus</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.server</param-name>-->
-    <!--<param-value>10.40.190.113</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.port</param-name>-->
-    <!--<param-value>2181</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.user</param-name>-->
-    <!--<param-value>root</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.password</param-name>-->
-    <!--<param-value>password</param-value>-->
-    <!--</init-param>-->
-    <!--</servlet>-->
-
-    <!--<servlet-mapping>-->
-    <!--<servlet-name>LoadDataServlet</servlet-name>-->
-    <!--<url-pattern>/loadrdf</url-pattern>-->
-    <!--</servlet-mapping>-->
-
-    <!--<servlet>-->
-    <!--<servlet-name>QueryDataServlet</servlet-name>-->
-    <!--<servlet-class>org.apache.cloud.rdf.web.cloudbase.sail.QueryDataServlet</servlet-class>-->
-
-    <!--<init-param>-->
-    <!--<param-name>rts.instance</param-name>-->
-    <!--<param-value>stratus</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.server</param-name>-->
-    <!--<param-value>10.40.190.113</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.port</param-name>-->
-    <!--<param-value>2181</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.user</param-name>-->
-    <!--<param-value>root</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.password</param-name>-->
-    <!--<param-value>password</param-value>-->
-    <!--</init-param>-->
-    <!--</servlet>-->
-
-    <!--<servlet-mapping>-->
-    <!--<servlet-name>QueryDataServlet</servlet-name>-->
-    <!--<url-pattern>/queryrdf</url-pattern>-->
-    <!--</servlet-mapping>-->
-
-    <!--<servlet>-->
-    <!--<servlet-name>QuerySerqlDataServlet</servlet-name>-->
-    <!--<servlet-class>org.apache.cloud.rdf.web.cloudbase.sail.QuerySerqlDataServlet</servlet-class>-->
-
-    <!--<init-param>-->
-    <!--<param-name>rts.instance</param-name>-->
-    <!--<param-value>stratus</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.server</param-name>-->
-    <!--<param-value>10.40.190.113</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.port</param-name>-->
-    <!--<param-value>2181</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.user</param-name>-->
-    <!--<param-value>root</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.password</param-name>-->
-    <!--<param-value>password</param-value>-->
-    <!--</init-param>-->
-    <!--</servlet>-->
-
-    <!--<servlet-mapping>-->
-    <!--<servlet-name>QuerySerqlDataServlet</servlet-name>-->
-    <!--<url-pattern>/queryserql</url-pattern>-->
-    <!--</servlet-mapping>-->
-
-    <!--<servlet>-->
-    <!--<servlet-name>DeleteDataServlet</servlet-name>-->
-    <!--<servlet-class>org.apache.cloud.rdf.web.cloudbase.sail.DeleteDataServlet</servlet-class>-->
-
-    <!--<init-param>-->
-    <!--<param-name>rts.instance</param-name>-->
-    <!--<param-value>stratus</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.server</param-name>-->
-    <!--<param-value>10.40.190.113</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.port</param-name>-->
-    <!--<param-value>2181</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.user</param-name>-->
-    <!--<param-value>root</param-value>-->
-    <!--</init-param>-->
-    <!--<init-param>-->
-    <!--<param-name>rts.password</param-name>-->
-    <!--<param-value>password</param-value>-->
-    <!--</init-param>-->
-    <!--</servlet>-->
-
-    <!--<servlet-mapping>-->
-    <!--<servlet-name>DeleteDataServlet</servlet-name>-->
-    <!--<url-pattern>/deletequery</url-pattern>-->
-    <!--</servlet-mapping>-->
 </web-app>
