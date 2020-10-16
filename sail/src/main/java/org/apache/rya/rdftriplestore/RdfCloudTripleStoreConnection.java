@@ -57,6 +57,7 @@ import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
 import org.eclipse.rdf4j.query.algebra.evaluation.impl.*;
 import org.eclipse.rdf4j.query.impl.EmptyBindingSet;
 import org.eclipse.rdf4j.rio.helpers.RDFStarUtil;
+import org.eclipse.rdf4j.rio.helpers.NTriplesUtil;
 import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.helpers.AbstractSailConnection;
 import org.slf4j.Logger;
@@ -76,15 +77,13 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
 
     private static final Logger logger = LoggerFactory.getLogger(RdfCloudTripleStoreConnection.class);
 
-
     private RdfEvalStatsDAO<C> rdfEvalStatsDAO;
     private SelectivityEvalDAO<C> selectEvalDAO;
     private RyaDAO<C> ryaDAO;
     private InferenceEngine inferenceEngine;
     private NamespaceManager namespaceManager;
     private final C conf;
-
-
+    private final ValueFactory vf;
     private ProvenanceCollector provenanceCollector;
 
     public RdfCloudTripleStoreConnection(final RdfCloudTripleStore<C> sailBase, final C conf, final ValueFactory vf)
@@ -92,6 +91,7 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
         super(sailBase);
         this.store = sailBase;
         this.conf = conf;
+        this.vf = vf;
         initialize();
     }
 
@@ -123,45 +123,48 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
         try {
             final String cv_s = conf.getCv();
             final byte[] cv = cv_s == null ? null : cv_s.getBytes(StandardCharsets.UTF_8);
-            List<RyaStatement> ryaStatements = null;// = new ArrayList<>();
+            List<RyaStatement> ryaStatements = null;
+            
             if (contexts != null && contexts.length > 0) {
                 for (final Resource context : contexts) {
-                    final List<Statement> list = new ArrayList<>();
-//                    Statements.create(SimpleValueFactory.getInstance(), subject, predicate, object, list);
+                    final List<Statement> stmtList = new ArrayList<>();
+                    Statement stmt = vf.createStatement(subject, predicate, object, context);
+                    Statements.convertRDFStarToReification(vf, 
+                        (t) -> vf.createIRI(RDFStarUtil.TRIPLE_PREFIX + Base64.getUrlEncoder().encodeToString(NTriplesUtil.toNTriplesString(t).getBytes(StandardCharsets.UTF_8))),
+                        stmt,
+                        stmtList::add);
 
-                    Statement stmt = SimpleValueFactory.getInstance().createStatement(subject, predicate, object, context);
-                    Statements.convertRDFStarToReification(stmt, list::add);
-
-                    ryaStatements = list.stream().map(x -> new RyaStatement(
-                            RdfToRyaConversions.convertResource(RDFStarUtil.toRDFEncodedValue(x.getSubject())),
-                            RdfToRyaConversions.convertIRI(x.getPredicate()),
-                            RdfToRyaConversions.convertValue(RDFStarUtil.toRDFEncodedValue(x.getObject())),
-                            RdfToRyaConversions.convertResource(context),
-                            null, new StatementMetadata(), cv)).collect(Collectors.toList());
+                    ryaStatements = stmtList.stream().map(x -> new RyaStatement(
+                        RdfToRyaConversions.convertResource(x.getSubject()),
+                        RdfToRyaConversions.convertIRI(x.getPredicate()),
+                        RdfToRyaConversions.convertValue(x.getObject()),
+                        RdfToRyaConversions.convertResource(context),
+                        null,
+                        new StatementMetadata(),
+                        cv)).collect(Collectors.toList());
                 }
             } else {
-                final List<Statement> list = new ArrayList<>();
-                Statements.create(SimpleValueFactory.getInstance(), subject, predicate, object, list);
-                ryaStatements = new ArrayList<>();
-                for (final Statement stmt : list) {
-                    List<RyaStatement> finalRyaStatements = ryaStatements;
-                    Statements.convertRDFStarToReification(stmt, x -> {
-                        final RyaStatement ryaStatement = new RyaStatement(
-                                RdfToRyaConversions.convertResource(RDFStarUtil.toRDFEncodedValue(x.getSubject())),
-                                RdfToRyaConversions.convertIRI(x.getPredicate()),
-                                RdfToRyaConversions.convertValue(RDFStarUtil.toRDFEncodedValue(x.getSubject())),
-                                null, null, new StatementMetadata(), cv);
-                        finalRyaStatements.add(ryaStatement);
-                    });
-                }            }
+                final List<Statement> stmtList = new ArrayList<>();
+                Statement stmt = vf.createStatement(subject, predicate, object);
+                Statements.convertRDFStarToReification(vf, 
+                    (t) -> vf.createIRI(RDFStarUtil.TRIPLE_PREFIX + Base64.getUrlEncoder().encodeToString(NTriplesUtil.toNTriplesString(t).getBytes(StandardCharsets.UTF_8))),
+                    stmt,
+                    stmtList::add);
+
+                ryaStatements = stmtList.stream().map(x -> new RyaStatement(
+                RdfToRyaConversions.convertResource(x.getSubject()),
+                RdfToRyaConversions.convertIRI(x.getPredicate()),
+                RdfToRyaConversions.convertValue(x.getObject()),
+                null, /* no context */
+                null, 
+                new StatementMetadata(), 
+                cv)).collect(Collectors.toList());
+            }
             ryaDAO.add(ryaStatements.iterator());
         } catch (final RyaDAOException e) {
             throw new SailException(e);
         }
     }
-
-
-
 
     @Override
     protected void clearInternal(final Resource... aresource) throws SailException {
