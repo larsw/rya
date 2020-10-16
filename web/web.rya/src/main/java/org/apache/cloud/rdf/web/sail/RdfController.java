@@ -48,6 +48,8 @@ import org.eclipse.rdf4j.query.parser.ParsedTupleQuery;
 import org.eclipse.rdf4j.query.parser.ParsedUpdate;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
+import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLStarResultsJSONWriter;
+import org.eclipse.rdf4j.query.resultio.sparqlstarjson.SPARQLStarResultsJSONWriterFactory;
 import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -133,7 +135,15 @@ public class RdfController {
                     // Perform Tuple Query
                     TupleQueryResultHandler handler;
 
-                    if (requestedFormat && emit.equalsIgnoreCase("json")) {
+                    String acceptHeaderValue = request.getHeader("Accept");
+
+                    if ((acceptHeaderValue != null &&
+                         acceptHeaderValue.equalsIgnoreCase("application/x-sparqlstar-results+json")) ||
+                        (requestedFormat &&
+                         emit.equalsIgnoreCase("sparqlstar+json"))) {
+                        handler = new SPARQLStarResultsJSONWriter(os);
+                        response.setContentType("application/x-sparqlstar-results+json");
+                    } else if (requestedFormat && emit.equalsIgnoreCase("json")) {
                         handler = new SPARQLResultsJSONWriter(os);
                         response.setContentType("application/json");
                     } else {
@@ -253,7 +263,7 @@ public class RdfController {
         }
     }
 
-    private void performUpdate(final String query, final SailRepositoryConnection conn, final ServletOutputStream os, final String infer, final String vis) throws RepositoryException, MalformedQueryException, IOException {
+    public void performUpdate(final String query, final SailRepositoryConnection conn, final ServletOutputStream os, final String infer, final String vis) throws RepositoryException, MalformedQueryException, IOException {
         final Update update = conn.prepareUpdate(QueryLanguage.SPARQL, query);
         if (infer != null && infer.length() > 0) {
             update.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(Boolean.parseBoolean(infer)));

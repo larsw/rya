@@ -33,18 +33,24 @@ import org.apache.rya.rdftriplestore.RdfCloudTripleStore;
 import org.apache.rya.rdftriplestore.RdfCloudTripleStoreConnection;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.QueryResultHandlerException;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResultHandler;
-import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.parser.ParsedOperation;
+import org.eclipse.rdf4j.query.parser.ParsedTupleQuery;
+import org.eclipse.rdf4j.query.parser.ParsedUpdate;
+import org.eclipse.rdf4j.query.parser.QueryParserUtil;
+import org.eclipse.rdf4j.query.parser.sparql.SPARQLParser;
+import org.eclipse.rdf4j.query.parser.sparql.SPARQLParserFactory;
+import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLStarResultsJSONWriter;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepositoryConnection;
 
 import junit.framework.TestCase;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFParser;
+import org.eclipse.rdf4j.rio.helpers.RDFStarUtil;
+import org.eclipse.rdf4j.rio.ntriples.NTriplesParser;
+import org.eclipse.rdf4j.rio.rdfxml.RDFXMLParser;
 
 /**
  * Class PartitionConnectionTest
@@ -89,7 +95,28 @@ public class RdfCloudTripleStoreTest extends TestCase {
 
         storeConnection = new RdfCloudTripleStoreConnection<AccumuloRdfConfiguration>(sail, conf, SimpleValueFactory.getInstance());
 
-        loadData();
+        loadRDFStarData();
+    }
+
+    private void loadRDFStarData() throws RepositoryException, DatatypeConfigurationException {
+        final String ns = "http://foo.com/#";
+
+        storeConnection.begin();
+
+        final String query = "PREFIX : <http://foobar.com/#>\nINSERT DATA{\n <<:john :knows :jack>> :credibility \"0.5\" .}";
+
+        storeConnection.addStatement(RDFStarUtil.toRDFEncodedValue(VF.createTriple(
+                VF.createIRI(ns, "john"),
+                VF.createIRI(ns, "knows"),
+                VF.createIRI(ns, "dave"))),
+                VF.createIRI(ns, "credibility"),
+                VF.createLiteral(0.5));
+
+        Statement stmt = VF.createStatement(VF.createIRI(ns, "john"),
+                                            VF.createIRI(ns, "knows"),
+                                            VF.createIRI(ns, "dave"));
+        storeConnection.addStatement((Resource)stmt, VF.createIRI(ns, "credibility"), VF.createLiteral(0.5));
+        storeConnection.commit();
     }
 
     private void loadData() throws RepositoryException, DatatypeConfigurationException {
@@ -652,6 +679,13 @@ public class RdfCloudTripleStoreTest extends TestCase {
         CountTupleHandler tupleHandler = new CountTupleHandler();
         tupleQuery.evaluate(tupleHandler);
         assertEquals(2, tupleHandler.getCount());
+    }
+
+    public void testRDFStarStuff() throws Exception {
+        String query = "SELECT ?s ?p ?o WHERE {?s ?p ?o}";
+
+        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
+        tupleQuery.evaluate(new PrintTupleHandler());
     }
 
     private static class PrintTupleHandler implements TupleQueryResultHandler {
