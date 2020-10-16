@@ -129,7 +129,7 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
                 for (final Resource context : contexts) {
                     final List<Statement> stmtList = new ArrayList<>();
                     Statement stmt = vf.createStatement(subject, predicate, object, context);
-                    Statements.convertRDFStarToReification(vf, 
+                    Statements.convertRDFStarToReification(vf,
                         (t) -> vf.createIRI(RDFStarUtil.TRIPLE_PREFIX + Base64.getUrlEncoder().encodeToString(NTriplesUtil.toNTriplesString(t).getBytes(StandardCharsets.UTF_8))),
                         stmt,
                         stmtList::add);
