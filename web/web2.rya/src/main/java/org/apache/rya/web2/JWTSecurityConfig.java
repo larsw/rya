@@ -13,6 +13,14 @@ public class JWTSecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http) {
+//	    return http.csrf().disable()
+//		    .cors()
+//		    .and()
+//		    .authorizeExchange()
+//		    .pathMatchers("/")
+//		    .permitAll()
+//		    .and()
+//		    .build();
         return http
                 .csrf().disable()
                 .cors()
@@ -22,11 +30,15 @@ public class JWTSecurityConfig {
                 .and()
                 .and()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.POST, "/sparql")
-                .hasAuthority("SCOPE_execute")
                 .pathMatchers(HttpMethod.GET, "/")
-                .permitAll()
+                .hasAuthority("SCOPE_sparql")
+                .pathMatchers(HttpMethod.POST, "/sparql")
+                .hasAnyAuthority("SCOPE_sparql:query", "SCOPE_sparql:update")
                 .and()
                 .build();
     }
+
+    // TODO
+    // Add issuer and audience validation:
+    // https://docs.spring.io/spring-security/site/docs/5.1.13.BUILD-SNAPSHOT/reference/html/webflux-oauth2.html
 }
