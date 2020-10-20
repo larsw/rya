@@ -103,7 +103,8 @@ public class FooTest extends TestCase {
                 this.i = i;
             }
         };
-        controller.performUpdate(query, connection, os, null, null);
+
+        //controller.performUpdate(query, connection, os, null, null);
 
         String q = "SELECT ?s ?p ?o WHERE {?s ?p ?o}";
 

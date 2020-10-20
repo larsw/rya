@@ -263,7 +263,7 @@ public class RdfController {
         }
     }
 
-    public void performUpdate(final String query, final SailRepositoryConnection conn, final ServletOutputStream os, final String infer, final String vis) throws RepositoryException, MalformedQueryException, IOException {
+    protected void performUpdate(final String query, final SailRepositoryConnection conn, final ServletOutputStream os, final String infer, final String vis) throws RepositoryException, MalformedQueryException, IOException {
         final Update update = conn.prepareUpdate(QueryLanguage.SPARQL, query);
         if (infer != null && infer.length() > 0) {
             update.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(Boolean.parseBoolean(infer)));

@@ -42,7 +42,7 @@ under the License.
         <dependency>
             <groupId>org.apache.giraph</groupId>
             <artifactId>giraph-core</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.0-hadoop2</version>
             <exclusions>
                 <!-- Exclude for incompatible license -->
                 <!-- If this exclusion causes a ClassNotFoundException at runtime, -->
@@ -56,7 +56,7 @@ under the License.
         <dependency>
             <groupId>org.apache.giraph</groupId>
             <artifactId>giraph-accumulo</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.0-hadoop2</version>
             <exclusions>
             	<!-- exclude for incompatible license, see above if this causes issues. -->
                 <exclusion>

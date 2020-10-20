@@ -31,6 +31,7 @@ under the License.
     <packaging>pom</packaging>
 
     <modules>
+        <module>rya.giraph</module>
         <module>rya.prospector</module>
         <module>rya.manual</module>
         <module>periodic.notification</module>

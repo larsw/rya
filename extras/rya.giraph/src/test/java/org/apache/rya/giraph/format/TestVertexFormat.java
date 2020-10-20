@@ -64,10 +64,10 @@ public class TestVertexFormat extends BspCase {
         conf.set(ConfigUtils.USE_FREETEXT, "false");
         conf.set(ConfigUtils.USE_TEMPORAL, "false");
         conf.set(RdfCloudTripleStoreConfiguration.CONF_TBL_PREFIX, "rya_");
-        conf.set(ConfigUtils.CLOUDBASE_USER, "root");
-        conf.set(ConfigUtils.CLOUDBASE_PASSWORD, "");
-        conf.set(ConfigUtils.CLOUDBASE_INSTANCE, "test");
-        conf.set(ConfigUtils.CLOUDBASE_AUTHS, "");
+        conf.set(AccumuloRdfConfiguration.CLOUDBASE_USER, "root");
+        conf.set(AccumuloRdfConfiguration.CLOUDBASE_PASSWORD, "");
+        conf.set(AccumuloRdfConfiguration.CLOUDBASE_INSTANCE, "test");
+        conf.set(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH, "");
         return conf;
     }
 
