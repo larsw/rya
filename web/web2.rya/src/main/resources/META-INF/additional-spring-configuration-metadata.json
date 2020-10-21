@@ -1,10 +1,14 @@
 {
   "properties": [
     {
-      "name": "rya.sparql.api.audience",
+      "name": "rya.sparql.api.authorizationsClaim",
       "type": "java.lang.String",
-      "description": "Typically the name of the configured name for this Resource Server in the Authorization Server's config.",
-      "defaultValue": "sparql-api"
+      "description": "Name of claim containing a comma-separated list of authorizations."
+    },
+    {
+      "name": "rya.sparql.api.clientId",
+      "type": "java.lang.String",
+      "description": "The client_id of this Resource Server."
     }
   ]
 }

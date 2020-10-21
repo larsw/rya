@@ -1,60 +1,53 @@
 package org.apache.rya.web2;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
-public class JWTSecurityConfig {
-    @Autowired
-    private Environment env;
-
+@Configuration
+public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     private String jwksUri;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
 
-    @Value("${rya.sparql.api.name}")
+    @Value("${rya.sparql.api.clientId}")
     private String name;
 
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity http) {
-        return http
-                .csrf().disable()
-                .cors()
-                .and()
-                .oauth2ResourceServer()
-                .jwt()
-                .and()
-                .and()
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.GET, "/")
-                .permitAll()
-                .pathMatchers(HttpMethod.POST, "/sparql")
-                .hasAuthority("SCOPE_sparql")
-//                .hasAnyAuthority("SCOPE_sparql:query", "SCOPE_sparql:update")
-                .and()
-                .build();
+    private static final CorsConfiguration corsConfiguration;
+
+    static {
+        corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedMethod(HttpMethod.GET);
+        corsConfiguration.addAllowedMethod(HttpMethod.POST);
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.setAllowCredentials(true);
     }
 
-    // https://docs.spring.io/spring-security/site/docs/5.1.13.BUILD-SNAPSHOT/reference/html/webflux-oauth2.html
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .cors(c -> c.configurationSource(x -> corsConfiguration))
+                .authorizeRequests(authz ->
+                        authz.antMatchers(HttpMethod.GET, "/").permitAll()
+                             .antMatchers(HttpMethod.POST, "/sparql").hasAuthority("SCOPE_sparql"))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt());
+    }
+
     @Bean
-    public ReactiveJwtDecoder jwtDecoder() {
+    public JwtDecoder jwtDecoder() {
 
         ArrayList<OAuth2TokenValidator<Jwt>> validators = new ArrayList<>();
         validators.add(new JwtTimestampValidator());
@@ -63,7 +56,8 @@ public class JWTSecurityConfig {
 
         OAuth2TokenValidator<Jwt> delegatingValidator = new DelegatingOAuth2TokenValidator<>(validators);
 
-        NimbusReactiveJwtDecoder jwtDecoder = NimbusReactiveJwtDecoder.withJwkSetUri(jwksUri).build();
+
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwksUri).build();
         jwtDecoder.setJwtValidator(delegatingValidator);
         return jwtDecoder;
     }

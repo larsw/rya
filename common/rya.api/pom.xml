@@ -34,6 +34,7 @@ under the License.
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.calrissian.mango</groupId>
@@ -96,6 +97,7 @@ under the License.
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
+
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
