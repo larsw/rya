@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.rya.api.security.SecurityProvider;
 
-public class SecurityProviderImpl implements SecurityProvider{
+public class SecurityProviderImpl implements SecurityProvider {
 	
 	public String[] getUserAuths(HttpServletRequest incRequest) {
 		String[] auths = incRequest.getParameterValues("query.auth");

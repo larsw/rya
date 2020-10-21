@@ -1,15 +1,20 @@
 server:
   port: 8081
 
-
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://192.168.2.15:8080/auth/realms/rya
+          issuer-uri: http://keycloak.localhost/auth/realms/rya
+          jwk-set-uri: http://keycloak.localhost/auth/realms/rya/protocol/openid-connect/certs
 
 debug: true
 logging:
   level:
     root: DEBUG
+rya:
+  sparql:
+    api:
+      name: sparql-api
+      authorizationsClaim: keywords

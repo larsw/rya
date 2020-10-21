@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "rya.sparql.api.audience",
+      "type": "java.lang.String",
+      "description": "Typically the name of the configured name for this Resource Server in the Authorization Server's config.",
+      "defaultValue": "sparql-api"
+    }
+  ]
+}
