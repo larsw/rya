@@ -21,3 +21,10 @@ rya:
     api:
       clientId: sparql-api
       authorizationsClaim: keywords
+  instance:
+    name: rya
+    username: root
+    password: secret
+    zk: localhost:2181
+    tableprefix: rya
+    displayqueryplan: false
