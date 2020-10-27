@@ -43,6 +43,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.rio.helpers.RDFStarUtil;
 
 /**
  * Date: 7/20/12
@@ -122,6 +123,8 @@ public class RyaDAOHelper {
     public static CloseableIteration<? extends Map.Entry<Statement, BindingSet>, QueryEvaluationException> query(RyaDAO ryaDAO, Collection<Map.Entry<Statement, BindingSet>> statements, RdfCloudTripleStoreConfiguration conf) throws QueryEvaluationException {
         Collection<Map.Entry<RyaStatement, BindingSet>> ryaStatements = new ArrayList<Map.Entry<RyaStatement, BindingSet>>(statements.size());
         for (Map.Entry<Statement, BindingSet> entry : statements) {
+
+
             ryaStatements.add(new RdfCloudTripleStoreUtils.CustomEntry<RyaStatement, BindingSet>
                     (RdfToRyaConversions.convertStatement(entry.getKey()), entry.getValue()));
         }

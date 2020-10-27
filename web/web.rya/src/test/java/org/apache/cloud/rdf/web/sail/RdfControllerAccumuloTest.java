@@ -8,9 +8,9 @@ package org.apache.cloud.rdf.web.sail;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -91,8 +91,8 @@ public class RdfControllerAccumuloTest {
                 .param("query", "SELECT * WHERE { ?s a <http://mynamespace/ProductType> . }")
                 .param("query.resultformat", "xml"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_XML));
-        }
+                .andExpect(content().contentType("application/x-sparql-results+xml"));
+    }
 
     @Test
     public void loadDataWithVisibilities() throws Exception {
@@ -107,7 +107,7 @@ public class RdfControllerAccumuloTest {
                 .param("format", "N-Triples")
                 .param("conf.cv", "B&C"))
                 .andExpect(status().isOk());
-        
+
         ResultActions actions;
         actions = this.mockMvc.perform(get("/queryrdf")
                 .param("query.resultformat", "xml")
@@ -154,14 +154,14 @@ public class RdfControllerAccumuloTest {
 
         String rstString = response.getContentAsString();
         TupleQueryResult result = QueryResultIO.parseTuple(new ByteArrayInputStream(rstString.getBytes()), TupleQueryResultFormat.SPARQL);
-        
+
         assertEquals(1, result.getBindingNames().size());
         String binding = result.getBindingNames().get(0);
-        
+
         assertTrue(result.hasNext());
         BindingSet bs = result.next();
         assertEquals(Integer.toString(count), bs.getBinding(binding).getValue().stringValue());
-    }        
+    }
 
     @Test
     public void updateQueryWithVisibilities() throws Exception {
@@ -214,5 +214,4 @@ public class RdfControllerAccumuloTest {
 
         validateCount(actions.andReturn().getResponse(), 2);
     }
-
 }

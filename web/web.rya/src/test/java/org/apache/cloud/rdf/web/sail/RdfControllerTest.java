@@ -94,7 +94,7 @@ public class RdfControllerTest {
                 .param("query", "SELECT * WHERE { ?s ?p ?o . }")
                 .param("query.resultformat", "xml"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_XML));
+                .andExpect(content().contentType("application/x-sparql-results+xml"));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class RdfControllerTest {
         this.mockMvc.perform(get("/queryrdf")
                 .param("query", "SELECT * WHERE { ?s ?p ?o . }"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_XML));
+                .andExpect(content().contentType("application/x-sparql-results+xml"));
     }
     
     /**

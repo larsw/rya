@@ -22,6 +22,7 @@ import org.eclipse.rdf4j.repository.sail.SailRepositoryConnection;
 import org.junit.Test;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import java.io.IOException;
 import java.util.List;
 
@@ -96,6 +97,16 @@ public class FooTest extends TestCase {
         final String query = "PREFIX : <http://foobar.com/#>\nINSERT DATA{\n <<:john :knows :jack>> :credibility \"0.5\" .}";
 
         ServletOutputStream os = new ServletOutputStream() {
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
+
+            }
+
             int i;
 
             @Override

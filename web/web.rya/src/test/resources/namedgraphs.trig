@@ -35,3 +35,7 @@
       :Chris ex:email <mailto:chris@bizer.de>.
       :Tom rdf:type ex:Person .
       :Tom ex:email <mailto:tom@bizer.de>}
+
+:G5 {
+  <<:john :knows :jack>> :credibility "nill" .
+}

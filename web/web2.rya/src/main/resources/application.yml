@@ -1,9 +1,6 @@
 server:
   port: 8081
 
-database:
-  implementation: accumulo
-
 spring:
   security:
     oauth2:
@@ -16,6 +13,10 @@ debug: true
 logging:
   level:
     "org.apache.rya.web2.controllers": DEBUG
+
+database:
+  implementation: accumulo
+
 rya:
   sparql:
     api:

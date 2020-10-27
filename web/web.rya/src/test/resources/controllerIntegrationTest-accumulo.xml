@@ -31,10 +31,14 @@ under the License.
         <constructor-arg value="webtest"/>
     </bean>
 
+    <bean id="passwordToken" class="org.apache.accumulo.core.client.security.tokens.PasswordToken">
+        <constructor-arg value="" />
+    </bean>
+
     <bean id="connector" factory-bean="zkInstance"
           factory-method="getConnector">
         <constructor-arg value="root"/>
-        <constructor-arg value=""/>
+        <constructor-arg ref="passwordToken"/>
     </bean>
 
     <bean id="conf" class="org.apache.rya.accumulo.AccumuloRdfConfiguration">

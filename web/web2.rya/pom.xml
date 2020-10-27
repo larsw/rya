@@ -132,15 +132,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
     </dependencies>
 
     <build>
         <finalName>web2.rya</finalName>
-        <resources>
+        <!--        <resources>
             <resource>
-                <!-- filter the web.xml so the correct db-related spring-root.xml will
-                    be used -->
-                <!-- based on the profile settings, below. -->
                 <targetPath>${project.build.directory}</targetPath>
                 <filtering>true</filtering>
                 <directory>src/main/webapp/WEB-INF</directory>
@@ -148,14 +146,14 @@
                     <include>web.xml</include>
                 </includes>
             </resource>
-        </resources>
+          </resources> -->
 
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webXml>${project.build.directory}/web.xml</webXml>
+                      <!-- <webXml>${project.build.directory}/web.xml</webXml> -->
                     <packagingExcludes>
                         WEB-INF/lib/*jsp*.jar,
                         WEB-INF/lib/servlet*.jar,

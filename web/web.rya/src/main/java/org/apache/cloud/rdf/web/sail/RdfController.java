@@ -51,6 +51,7 @@ import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLStarResultsJSONWriter;
 import org.eclipse.rdf4j.query.resultio.sparqlstarjson.SPARQLStarResultsJSONWriterFactory;
 import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
+import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLStarResultsXMLWriter;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -148,7 +149,7 @@ public class RdfController {
                         response.setContentType("application/json");
                     } else {
                         handler = new SPARQLResultsXMLWriter(os);
-                        response.setContentType("text/xml");
+                        response.setContentType("application/x-sparql-results+xml");
                     }
 
                     performQuery(query, conn, auth, infer, nullout, handler);

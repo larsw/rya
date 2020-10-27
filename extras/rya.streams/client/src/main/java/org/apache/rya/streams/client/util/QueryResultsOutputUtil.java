@@ -30,6 +30,7 @@ import org.apache.rya.streams.api.exception.RyaStreamsException;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
 import org.eclipse.rdf4j.query.algebra.TupleExpr;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
+import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLStarResultsJSONWriter;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFWriter;
@@ -115,7 +116,7 @@ public class QueryResultsOutputUtil {
         requireNonNull(shutdownSignal);
 
         // Create a writer that does not pretty print.
-        final SPARQLResultsJSONWriter writer = new SPARQLResultsJSONWriter(out);
+        final SPARQLStarResultsJSONWriter writer = new SPARQLStarResultsJSONWriter(out);
         final WriterConfig config = writer.getWriterConfig();
         config.set(BasicWriterSettings.PRETTY_PRINT, false);
 
