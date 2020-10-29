@@ -33,10 +33,7 @@ import org.apache.rya.api.log.LogUtils;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Literals;
 import org.eclipse.rdf4j.model.util.Statements;
-import org.eclipse.rdf4j.rio.helpers.RDFStarUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -156,38 +153,4 @@ public class RdfToRyaConversions {
                 convertValue(object),
                 convertResource(context));
     }
-
-//    public static Iterable<RyaStatement> convertAndExpandStatement(final Statement statement) {
-//        if (statement == null) {
-//            return null;
-//        }
-//
-//        List<RyaStatement> list = new ArrayList<>();
-//
-//        final Resource subject = statement.getSubject();
-//        final IRI predicate = statement.getPredicate();
-//        final Value object = statement.getObject();
-//        final Resource context = statement.getContext();
-//
-//        if (subject instanceof Triple) {
-//            Triple triple = ((Triple)subject);
-//            list.addAll(convertTriple(triple));
-//        }
-//
-//        if (object instanceof Triple) {
-//
-//        }
-//
-//        return list;
-//    }
-//
-//    private static Collection<RyaStatement> convertTriple(Triple triple) {
-//        List<RyaStatement> list = new ArrayList<>();
-//        if (triple.getSubject() instanceof Triple) {
-//            Collection<RyaStatement> statements = convertTriple((Triple)triple.getSubject());
-//        }
-//        if (triple.getObject() instanceof Triple) {
-//
-//        }
-//    }
 }

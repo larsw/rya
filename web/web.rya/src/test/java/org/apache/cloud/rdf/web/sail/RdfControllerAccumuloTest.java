@@ -72,6 +72,7 @@ public class RdfControllerAccumuloTest {
         try {
             RepositoryConnection con = repository.getConnection();
             con.add(getClass().getResourceAsStream("/test.nt"), "", RDFFormat.NTRIPLES);
+            con.add(getClass().getResourceAsStream("/sample.ttls"), "", RDFFormat.TURTLESTAR);
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,12 +87,29 @@ public class RdfControllerAccumuloTest {
     }
 
     @Test
+    public void sparqlStarQuery() throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(get("/queryrdf")
+                        .param("query", "SELECT ?s ?p ?o ?c ?n\n" +
+                                                     "WHERE {<<?s ?p ?o>> ?c ?n}")
+                        .param("query.resultformat", "xml")
+                        .header("Accept", "application/x-sparqlstar-results+xml"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/x-sparqlstar-results+xml"))
+                .andReturn().getResponse();
+            String content = response.getContentAsString();
+            System.out.println(content);
+    }
+
+    @Test
     public void emptyQueryXMLFormat() throws Exception {
         this.mockMvc.perform(get("/queryrdf")
                 .param("query", "SELECT * WHERE { ?s a <http://mynamespace/ProductType> . }")
                 .param("query.resultformat", "xml"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/x-sparql-results+xml"));
+                .andExpect(content().contentType("text/xml"));
+
+
+
     }
 
     @Test

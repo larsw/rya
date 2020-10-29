@@ -38,8 +38,6 @@ import org.apache.rya.rdftriplestore.provenance.ProvenanceCollectionException;
 import org.apache.rya.rdftriplestore.provenance.ProvenanceCollector;
 import org.apache.rya.rdftriplestore.utils.DefaultStatistics;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
-import org.eclipse.rdf4j.common.iteration.ConvertingIteration;
-import org.eclipse.rdf4j.common.iteration.ExceptionConvertingIteration;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.ContextStatement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -52,7 +50,10 @@ import org.eclipse.rdf4j.query.algebra.QueryRoot;
 import org.eclipse.rdf4j.query.algebra.StatementPattern;
 import org.eclipse.rdf4j.query.algebra.TupleExpr;
 import org.eclipse.rdf4j.query.algebra.Var;
-import org.eclipse.rdf4j.query.algebra.evaluation.*;
+import org.eclipse.rdf4j.query.algebra.evaluation.EvaluationStrategy;
+import org.eclipse.rdf4j.query.algebra.evaluation.QueryBindingSet;
+import org.eclipse.rdf4j.query.algebra.evaluation.QueryOptimizer;
+import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
 import org.eclipse.rdf4j.query.algebra.evaluation.impl.*;
 import org.eclipse.rdf4j.query.impl.EmptyBindingSet;
 import org.eclipse.rdf4j.rio.helpers.RDFStarUtil;
@@ -595,7 +596,7 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
         return false;
     }
 
-    public static class StoreTripleSource<C extends RdfCloudTripleStoreConfiguration> implements RDFStarTripleSource {
+    public static class StoreTripleSource<C extends RdfCloudTripleStoreConfiguration> implements TripleSource {
 
         private final C conf;
         private final RyaDAO<C> ryaDAO;
@@ -622,22 +623,6 @@ public class RdfCloudTripleStoreConnection<C extends RdfCloudTripleStoreConfigur
         @Override
         public ValueFactory getValueFactory() {
             return RdfCloudTripleStoreConstants.VALUE_FACTORY;
-        }
-
-        @Override
-        public CloseableIteration<? extends Triple, QueryEvaluationException> getRdfStarTriples(Resource subject, IRI predicate, Value object) throws QueryEvaluationException {
-            return new ConvertingIteration<Statement, Triple, QueryEvaluationException>(
-                    new ExceptionConvertingIteration<Statement, QueryEvaluationException>(getStatements(subject, predicate, object)) {
-                        @Override
-                        protected QueryEvaluationException convert(Exception e) {
-                            return new QueryEvaluationException(e);
-                        }
-                    }) {
-                @Override
-                protected Triple convert(Statement stmt) {
-                    return Statements.toTriple(stmt);
-                }
-            };
         }
     }
 

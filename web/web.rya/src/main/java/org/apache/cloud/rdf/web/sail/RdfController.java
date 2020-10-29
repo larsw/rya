@@ -23,10 +23,7 @@ import static org.apache.rya.api.RdfCloudTripleStoreConstants.VALUE_FACTORY;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -138,18 +135,31 @@ public class RdfController {
 
                     String acceptHeaderValue = request.getHeader("Accept");
 
-                    if ((acceptHeaderValue != null &&
-                         acceptHeaderValue.equalsIgnoreCase("application/x-sparqlstar-results+json")) ||
-                        (requestedFormat &&
-                         emit.equalsIgnoreCase("sparqlstar+json"))) {
-                        handler = new SPARQLStarResultsJSONWriter(os);
-                        response.setContentType("application/x-sparqlstar-results+json");
-                    } else if (requestedFormat && emit.equalsIgnoreCase("json")) {
-                        handler = new SPARQLResultsJSONWriter(os);
-                        response.setContentType("application/json");
+                    if (acceptHeaderValue != null) {
+                        switch (acceptHeaderValue.toLowerCase(Locale.getDefault())) {
+                            case "application/x-sparqlstar-results+json":
+                                handler = new SPARQLStarResultsJSONWriter(os);
+                                response.setContentType("application/x-sparqlstar-results+json");
+                                break;
+                            case "application/x-sparql-results+json":
+                                handler = new SPARQLResultsJSONWriter(os);
+                                response.setContentType("application/x-sparqlstar-results+json");
+                                break;
+                            case "application/x-sparqlstar-results+xml":
+                                handler = new SPARQLStarResultsXMLWriter(os);
+                                response.setContentType("application/x-sparqlstar-results+xml");
+                                break;
+                            case "application/x-sparql-results+xml":
+                                handler = new SPARQLResultsXMLWriter(os);
+                                response.setContentType("application/x-sparql-results+xml");
+                                break;
+                            default:
+                                handler = new SPARQLResultsXMLWriter(os);
+                                response.setContentType("text/xml");
+                        }
                     } else {
                         handler = new SPARQLResultsXMLWriter(os);
-                        response.setContentType("application/x-sparql-results+xml");
+                        response.setContentType("text/xml");
                     }
 
                     performQuery(query, conn, auth, infer, nullout, handler);
