@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.apache.rya.api.RdfCloudTripleStoreConfiguration;
 import org.apache.rya.api.log.LogUtils;
 import org.apache.rya.api.security.SecurityProvider;
+import org.apache.rya.api.writers.SPARQLStarResultsXMLWithTripleFixingWriter;
 import org.apache.rya.rdftriplestore.RdfCloudTripleStoreConnection;
 import org.apache.rya.rdftriplestore.utils.RdfFormatUtils;
 import org.eclipse.rdf4j.model.Resource;
@@ -57,6 +58,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
 import org.eclipse.rdf4j.rio.rdfxml.RDFXMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -146,7 +148,7 @@ public class RdfController {
                                 response.setContentType("application/x-sparqlstar-results+json");
                                 break;
                             case "application/x-sparqlstar-results+xml":
-                                handler = new SPARQLStarResultsXMLWriter(os);
+                                handler = new SPARQLStarResultsXMLWithTripleFixingWriter(os);
                                 response.setContentType("application/x-sparqlstar-results+xml");
                                 break;
                             case "application/x-sparql-results+xml":

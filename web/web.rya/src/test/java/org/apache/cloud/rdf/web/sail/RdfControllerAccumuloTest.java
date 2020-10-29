@@ -89,8 +89,8 @@ public class RdfControllerAccumuloTest {
     @Test
     public void sparqlStarQuery() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(get("/queryrdf")
-                        .param("query", "SELECT ?s ?p ?o ?c ?n\n" +
-                                                     "WHERE {<<?s ?p ?o>> ?c ?n}")
+                        .param("query", "SELECT ?s ?p ?o\n" +
+                                                     "WHERE {?s ?p ?o}")
                         .param("query.resultformat", "xml")
                         .header("Accept", "application/x-sparqlstar-results+xml"))
                 .andExpect(status().isOk())
