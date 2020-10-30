@@ -141,12 +141,7 @@ public class SPARQLStarResultsXMLWithTripleFixingWriter extends SPARQLStarResult
         } else if (value instanceof IRI) {
             IRI iri = (IRI) value;
             if (RDFStarUtil.isEncodedTriple(iri)) {
-                Value val = RDFStarUtil.fromRDFEncodedValue(iri);
-                if (val instanceof Triple) {
-                    writeTriple((Triple)val);
-                } else {
-                    writeValue(val);
-                }
+                writeValue(RDFStarUtil.fromRDFEncodedValue(iri));
             } else {
                 writeURI((IRI) value);
             }
