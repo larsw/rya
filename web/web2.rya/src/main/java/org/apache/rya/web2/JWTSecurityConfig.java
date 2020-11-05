@@ -1,16 +1,21 @@
 package org.apache.rya.web2;
 
+import org.apache.rya.web2.services.PrincipalClaimsProvider;
+import org.apache.rya.web2.services.PrincipalClaimsProviderImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,5 +65,11 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwksUri).build();
         jwtDecoder.setJwtValidator(delegatingValidator);
         return jwtDecoder;
+    }
+
+    @Bean
+    public PrincipalClaimsProvider getPrincipalClaimsProvider() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new PrincipalClaimsProviderImpl(authentication);
     }
 }

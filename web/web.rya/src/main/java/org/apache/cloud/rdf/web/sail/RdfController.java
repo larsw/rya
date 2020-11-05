@@ -46,6 +46,7 @@ import org.eclipse.rdf4j.query.parser.ParsedOperation;
 import org.eclipse.rdf4j.query.parser.ParsedTupleQuery;
 import org.eclipse.rdf4j.query.parser.ParsedUpdate;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLStarResultsJSONWriter;
 import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
@@ -137,32 +138,29 @@ public class RdfController {
                     String acceptHeaderValue = request.getHeader("Accept");
 
                     if (acceptHeaderValue != null) {
-                        switch (acceptHeaderValue.toLowerCase(Locale.getDefault())) {
-                            case "application/x-sparqlstar-results+json":
-                                handler = new SPARQLStarResultsJSONWriter(os);
-                                response.setContentType("application/x-sparqlstar-results+json");
-                                break;
-                            case "application/x-sparql-results+json":
-                                handler = new SPARQLResultsJSONWriter(os);
-                                response.setContentType("application/x-sparqlstar-results+json");
-                                break;
-                            case "application/x-sparqlstar-results+xml":
-                                handler = new SPARQLStarResultsXMLWithTripleFixingWriter(os);
-                                response.setContentType("application/x-sparqlstar-results+xml");
-                                break;
-                            case "application/x-sparql-results+xml":
-                                handler = new SPARQLResultsXMLWriter(os);
-                                response.setContentType("application/x-sparql-results+xml");
-                                break;
-                            default:
-                                handler = new SPARQLResultsXMLWriter(os);
-                                response.setContentType("text/xml");
+
+
+                        if (acceptHeaderValue.equals(TupleQueryResultFormat.JSON.getDefaultMIMEType())) { // SPARQL/JSON
+                            handler = new SPARQLResultsJSONWriter(os);
+                            response.setContentType(TupleQueryResultFormat.JSON.getDefaultMIMEType());
+
+                        } else if (acceptHeaderValue.equalsIgnoreCase(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType())) { // SPARQL*/JSON
+                            handler = new SPARQLStarResultsJSONWithTripleFixingWriter(os);
+                            response.setContentType(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType());
+                        } else if (acceptHeaderValue.equalsIgnoreCase(TupleQueryResultFormat.SPARQL.getDefaultMIMEType())) { // SPARQL/XML
+                            handler = new SPARQLResultsXMLWriter(os);
+                            response.setContentType(TupleQueryResultFormat.SPARQL.getDefaultMIMEType());
+                        } else if (acceptHeaderValue.equalsIgnoreCase(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType())) { // SPARQL*/XML
+                            handler = new SPARQLStarResultsXMLWithTripleFixingWriter(os);
+                            response.setContentType(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType());
+                        } else {
+                            handler = new SPARQLResultsXMLWriter(os);
+                            response.setContentType(TupleQueryResultFormat.SPARQL.getDefaultMIMEType()); // Default: SPARQL/XML
                         }
                     } else {
                         handler = new SPARQLResultsXMLWriter(os);
-                        response.setContentType("text/xml");
+                        response.setContentType(TupleQueryResultFormat.SPARQL.getDefaultMIMEType());
                     }
-
                     performQuery(query, conn, auth, infer, nullout, handler);
                 } else if (operation instanceof ParsedUpdate) {
                     // Perform Update Query

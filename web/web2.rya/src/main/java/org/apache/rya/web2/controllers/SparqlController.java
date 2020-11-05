@@ -1,21 +1,25 @@
 package org.apache.rya.web2.controllers;
 
+import org.apache.rya.web2.services.PrincipalClaimsProvider;
 import org.apache.rya.web2.services.RyaAuthorizations;
 import org.apache.rya.web2.services.RyaAuthorizationsImpl;
+import org.apache.rya.web2.services.RyaService;
+import org.eclipse.rdf4j.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @CrossOrigin
 @RestController
@@ -23,27 +27,65 @@ import java.security.Principal;
 public class SparqlController {
     Logger logger = LoggerFactory.getLogger(SparqlController.class);
 
-    @Value("${rya.sparql.api.authorizationsClaim}")
-    private String authorizationsClaim;
+
+    private final RyaService ryaService;
+
+    public SparqlController(RyaService ryaService) {
+
+        this.ryaService = ryaService;
+    }
+
+    final static Pattern VisibilityPattern = Pattern.compile("[a-z0-9]+", Pattern.CASE_INSENSITIVE);
 
     @PostMapping
-    public void postSparqlQuery(HttpServletRequest request, HttpServletResponse response, Principal principal) {
-        String query = request.getParameter("query");
-        String visibility = request.getParameter("visibility");
-        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+    public ResponseEntity<QueryResult<?>> postSparqlQuery(
+            @RequestParam(value = "query") String query,
+            @RequestParam(value = "visibility", required = false) Optional<String> visibilityParam,
+            @RequestParam(value = "infer", required = false) Optional<String> inferParam,
+            @RequestParam(value = "nooutput", required = false) Optional<String> noOutputParam,
+            @RequestHeader(value = "Accept", required = false) String acceptHeader,
+            PrincipalClaimsProvider claimsProvider) {
 
-        RyaAuthorizations authorizations = getRyaAuthorizations(principal);
-        logger.debug("query: " + query);
-        logger.debug("visibility: " + visibility);
-        for (String authz : authorizations.getAuthorizations()) {
-            logger.debug("authz: " + authz);
+        Set<String> authorizationsSet = claimsProvider.getAuthorizations();
+        Set<String> visibilitiesSet = getVisibilities(visibilityParam);
+
+        if (!authorizationsSet.containsAll(visibilitiesSet)) {
+            logger.error("Unauthorized access: tried to use the following visibilities: {}, while only authorized for: {}",
+                    visibilitiesSet,
+                    authorizationsSet
+            );
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        response.setStatus(HttpStatus.OK.value());
+        String authorizationsSeparatedByComma = String.join(",", authorizationsSet);
+
+        logger.debug("query: {}, visibility: {}, infer: {}, accept: {}, authorizations: {}",
+                query,
+                visibilitiesSet,
+                inferParam,
+                acceptHeader,
+                authorizationsSet);
+
+        Boolean infer = inferParam.map(Boolean::parseBoolean).orElse(false);
+        Boolean noOutput = noOutputParam.map(Boolean::parseBoolean).orElse(false);
+
+        try {
+            return ResponseEntity.ok(ryaService.queryRdf(query, authorizationsSeparatedByComma, visibilityParam, infer, noOutput));
+        } catch (final Exception e) { // TODO differentiate between possible 4xx and 5xx exceptions.
+            logger.error("Could not perform query: {}", query); // TODO include claim(s) identifying the caller.
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    private RyaAuthorizations getRyaAuthorizations(Principal principal) {
-        JwtAuthenticationToken token = (JwtAuthenticationToken)principal;
-        String authorizationClaimValue = (String)token.getTokenAttributes().getOrDefault(authorizationsClaim, "");
-        return new RyaAuthorizationsImpl(authorizationClaimValue);
+    private Set<String> getVisibilities(Optional<String> visibility) {
+        return visibility.map(x -> {
+            Matcher matcher = VisibilityPattern.matcher(x);
+            Set<String> parts = new HashSet<>();
+            while(matcher.find()) {
+                parts.add(matcher.group());
+            }
+            return parts;
+        }).orElse(Collections.emptySet());
     }
+
+
 }

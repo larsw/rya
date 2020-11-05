@@ -4,9 +4,7 @@ package org.apache.rya.web2.services;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-
-import java.util.List;
+import java.util.Set;
 
 public class RyaAuthorizationsImplTests {
 
@@ -20,7 +18,7 @@ public class RyaAuthorizationsImplTests {
     @Test
     public void testReturnsListOfAuthorizationsOnValidInput() {
         RyaAuthorizationsImpl sut = new RyaAuthorizationsImpl("foo,bar,baz");
-        List<String> authorizations = sut.getAuthorizations();
+        Set<String> authorizations = sut.getAuthorizations();
         Assertions.assertEquals(3, authorizations.size());
     }
 }

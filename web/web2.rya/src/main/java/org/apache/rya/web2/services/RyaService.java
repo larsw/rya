@@ -1,12 +1,14 @@
 package org.apache.rya.web2.services;
 
-import javax.servlet.ServletOutputStream;
+import org.eclipse.rdf4j.query.QueryResult;
+
+import java.util.Optional;
+import java.util.Set;
 
 public interface RyaService {
-    void queryRdf(String query,
-                  String authorizations,
-                  String visibility,
-                  String infer,
-                  String requestedMimeType,
-                  ServletOutputStream outputStream);
+    QueryResult<?> queryRdf(final String query,
+                            final String authorizations,
+                            final Optional<String> visibility,
+                            final Boolean infer,
+                            final Boolean noOutput);
 }
