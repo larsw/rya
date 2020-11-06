@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.web.cors.CorsConfiguration;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,15 +60,14 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
         OAuth2TokenValidator<Jwt> delegatingValidator = new DelegatingOAuth2TokenValidator<>(validators);
 
-
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwksUri).build();
         jwtDecoder.setJwtValidator(delegatingValidator);
         return jwtDecoder;
     }
 
-    @Bean
-    public PrincipalClaimsProvider getPrincipalClaimsProvider() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return new PrincipalClaimsProviderImpl(authentication);
-    }
+    // @Bean
+    // public PrincipalClaimsProvider principalClaimsProvider() {
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     return new PrincipalClaimsProviderImpl(authentication);
+    // }
 }

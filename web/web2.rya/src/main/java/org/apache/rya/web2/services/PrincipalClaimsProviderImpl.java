@@ -15,22 +15,22 @@ public class PrincipalClaimsProviderImpl implements PrincipalClaimsProvider {
 
     private final Principal principal;
 
-    public PrincipalClaimsProviderImpl(Principal principal) {
+    public PrincipalClaimsProviderImpl(final Principal principal) {
 
         this.principal = principal;
     }
 
     public Set<String> getAuthorizations() {
-        JwtAuthenticationToken token = (JwtAuthenticationToken)principal;
-        Object claim = token.getTokenAttributes().get(authorizationsClaimName);
-        if (claim == null) return Collections.emptySet();
+        final JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
+        final Object claim = token.getTokenAttributes().get(authorizationsClaimName);
+        if (claim == null)
+            return Collections.emptySet();
 
         if (claim instanceof String) {
-            String stringClaim = (String)claim;
+            final String stringClaim = (String) claim;
             return Arrays.stream(stringClaim.split(",")).collect(Collectors.toSet());
-        }
-        else if (claim instanceof List<?>) {
-            List<String> listOfAuthorizations = (List<String>)claim;
+        } else if (claim instanceof List<?>) {
+            final List<String> listOfAuthorizations = (List<String>) claim;            
             return new HashSet<>(listOfAuthorizations);
         }
         throw new UnsupportedOperationException("Unknown claim type: " + claim.getClass().getName());

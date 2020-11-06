@@ -1,6 +1,7 @@
 package org.apache.rya.web2.controllers;
 
 import org.apache.rya.web2.services.PrincipalClaimsProvider;
+import org.apache.rya.web2.services.PrincipalClaimsProviderImpl;
 import org.apache.rya.web2.services.RyaAuthorizations;
 import org.apache.rya.web2.services.RyaAuthorizationsImpl;
 import org.apache.rya.web2.services.RyaService;
@@ -44,9 +45,11 @@ public class SparqlController {
             @RequestParam(value = "infer", required = false) Optional<String> inferParam,
             @RequestParam(value = "nooutput", required = false) Optional<String> noOutputParam,
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
-            PrincipalClaimsProvider claimsProvider) {
+            Principal principal) {
 
-        Set<String> authorizationsSet = claimsProvider.getAuthorizations();
+        PrincipalClaimsProvider principalClaimsProvider = new PrincipalClaimsProviderImpl(principal);
+
+        Set<String> authorizationsSet = principalClaimsProvider.getAuthorizations();
         Set<String> visibilitiesSet = getVisibilities(visibilityParam);
 
         if (!authorizationsSet.containsAll(visibilitiesSet)) {
