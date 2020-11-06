@@ -106,10 +106,7 @@ public class RdfControllerAccumuloTest {
                 .param("query", "SELECT * WHERE { ?s a <http://mynamespace/ProductType> . }")
                 .param("query.resultformat", "xml"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("text/xml"));
-
-
-
+                .andExpect(content().contentType("application/sparql-results+xml"));
     }
 
     @Test

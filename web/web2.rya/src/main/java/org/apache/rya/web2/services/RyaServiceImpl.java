@@ -45,7 +45,7 @@ import java.util.*;
 import static org.apache.rya.api.RdfCloudTripleStoreConstants.VALUE_FACTORY;
 
 @Service
-@Scope(WebApplicationContext.SCOPE_REQUEST)
+//@Scope(WebApplicationContext.SCOPE_REQUEST)
 public class RyaServiceImpl implements RyaService {
     Logger logger = LoggerFactory.getLogger(RyaServiceImpl.class);
 

@@ -1,9 +1,7 @@
 package org.apache.rya.web2;
 
-import org.apache.accumulo.core.client.AccumuloException;
-import org.apache.accumulo.core.client.AccumuloSecurityException;
-import org.apache.accumulo.core.client.Connector;
-import org.apache.accumulo.core.client.ZooKeeperInstance;
+import org.apache.accumulo.core.client.*;
+import org.apache.accumulo.core.client.mock.MockInstance;
 import org.apache.accumulo.core.client.security.tokens.PasswordToken;
 import org.apache.rya.accumulo.AccumuloRdfConfiguration;
 import org.apache.rya.accumulo.AccumuloRyaDAO;
@@ -21,10 +19,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RyaServiceConfig {
 
-    @Value("${rya.instance.name}")
+    @Value("${rya.instance.name:uno}")
     String zkInstanceName;
 
-    @Value("${rya.instance.zk}")
+    @Value("${rya.instance.zk:localhost:2181}")
     String zkInstanceZk;
 
     @Value("${rya.instance.username}")
@@ -33,14 +31,20 @@ public class RyaServiceConfig {
     @Value("${rya.instance.password}")
     String password;
 
-    @Value("${rya.tableprefix}")
+    @Value("${rya.tableprefix:rya_}")
     String tablePrefix;
 
-    @Value("${rya.displayqueryplan}")
+    @Value("${rya.displayqueryplan:false}")
     String displayQueryPlan;
 
+    @Value("${rya.instance.mock:false}")
+    Boolean mockInstance;
+
     @Bean
-    public ZooKeeperInstance zkInstance() {
+    public Instance zkInstance() {
+        if (mockInstance) {
+            return new MockInstance(zkInstanceName);
+        }
         return new ZooKeeperInstance(zkInstanceName, zkInstanceZk);
     }
 
@@ -50,7 +54,7 @@ public class RyaServiceConfig {
     }
 
     @Bean
-    public Connector connector(ZooKeeperInstance zkInstance, PasswordToken passwordToken)
+    public Connector connector(Instance zkInstance, PasswordToken passwordToken)
             throws AccumuloSecurityException, AccumuloException {
         return zkInstance.getConnector(userName, passwordToken);
     }

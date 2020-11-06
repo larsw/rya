@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak.localhost/auth/realms/rya
+          jwk-set-uri: http://keycloak.localhost/auth/realms/rya/protocol/openid-connect/certs
+
+debug: true
+logging:
+  level:
+    "org.apache.rya.web2.controllers": DEBUG
+
+database:
+  implementation: accumulo
+
+rya:
+  sparql:
+    api:
+      clientId: sparql-api
+      authorizationsClaim: keywords
+  instance:
+    name: uno
+    username: root
+    password: ""
+    tableprefix: rya
+    displayqueryplan: false
+    mock: true

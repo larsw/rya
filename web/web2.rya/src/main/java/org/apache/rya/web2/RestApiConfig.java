@@ -32,10 +32,10 @@ public class RestApiConfig implements WebMvcConfigurer {
 
     static final Map<String, MediaType> mediaTypes = new HashMap<>();
     static {
-        mediaTypes.put(TupleQueryResultFormat.SPARQL.getDefaultMIMEType(), new MediaType(TupleQueryResultFormat.SPARQL.getDefaultMIMEType()));
-        mediaTypes.put(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType(), new MediaType(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType()));
-        mediaTypes.put(TupleQueryResultFormat.JSON.getDefaultMIMEType(), new MediaType(TupleQueryResultFormat.JSON.getDefaultMIMEType()));
-        mediaTypes.put(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType(), new MediaType(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType()));
+        mediaTypes.put(TupleQueryResultFormat.SPARQL.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.SPARQL.getDefaultMIMEType()));
+        mediaTypes.put(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType()));
+        mediaTypes.put(TupleQueryResultFormat.JSON.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.JSON.getDefaultMIMEType()));
+        mediaTypes.put(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType()));
     }
 
     @Override
