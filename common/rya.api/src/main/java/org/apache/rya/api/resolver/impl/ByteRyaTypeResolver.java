@@ -24,7 +24,7 @@ import org.calrissian.mango.types.LexiTypeEncoders;
 import org.calrissian.mango.types.TypeEncoder;
 import org.calrissian.mango.types.exception.TypeDecodingException;
 import org.calrissian.mango.types.exception.TypeEncodingException;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 public class ByteRyaTypeResolver extends RyaTypeResolverImpl {
     public static final int LITERAL_MARKER = 9;
@@ -32,7 +32,7 @@ public class ByteRyaTypeResolver extends RyaTypeResolverImpl {
             .byteEncoder();
 
     public ByteRyaTypeResolver() {
-        super((byte) LITERAL_MARKER, XMLSchema.BYTE);
+        super((byte) LITERAL_MARKER, XSD.BYTE);
     }
 
     @Override

@@ -32,9 +32,6 @@ import org.apache.rya.api.domain.RyaTypeRange;
 import org.apache.rya.api.log.LogUtils;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Literals;
-import org.eclipse.rdf4j.model.util.Statements;
-
-import java.util.List;
 
 /**
  * Methods for converting values from their RDF4J object representations into

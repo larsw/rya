@@ -31,11 +31,13 @@ import org.eclipse.rdf4j.model.IRI;
  */
 public class RangeIRI extends RangeValue<IRI> implements IRI {
 
+    private static final long serialVersionUID = -9034853234007555962L;
+
     public RangeIRI(IRI start, IRI end) {
         super(start, end);
     }
 
-    public RangeIRI(RangeValue rangeValue) {
+    public RangeIRI(RangeValue<?> rangeValue) {
         super((IRI) rangeValue.getStart(), (IRI) rangeValue.getEnd());
     }
 

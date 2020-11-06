@@ -24,7 +24,7 @@ import org.calrissian.mango.types.LexiTypeEncoders;
 import org.calrissian.mango.types.TypeEncoder;
 import org.calrissian.mango.types.exception.TypeDecodingException;
 import org.calrissian.mango.types.exception.TypeEncodingException;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 /**
  * Date: 7/20/12
@@ -35,7 +35,7 @@ public class DoubleRyaTypeResolver extends RyaTypeResolverImpl {
     public static final TypeEncoder<Double, String> DOUBLE_TYPE_ENCODER = LexiTypeEncoders.doubleEncoder();
 
     public DoubleRyaTypeResolver() {
-        super((byte) DOUBLE_LITERAL_MARKER, XMLSchema.DOUBLE);
+        super((byte) DOUBLE_LITERAL_MARKER, XSD.DOUBLE);
     }
 
     @Override

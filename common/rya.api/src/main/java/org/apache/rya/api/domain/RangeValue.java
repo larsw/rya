@@ -29,6 +29,8 @@ import org.eclipse.rdf4j.model.Value;
  */
 public class RangeValue<T extends Value> implements Value {
 
+    private static final long serialVersionUID = -7925155162560750189L;
+
     private T start;
     private T end;
 

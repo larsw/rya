@@ -19,24 +19,24 @@
 package org.apache.rya.api.domain;
 
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class RyaTypeTest {
-    static RyaType a = new RyaType(XMLSchema.STRING, "http://www.example.com/Alice");
-    static RyaType b = new RyaType(XMLSchema.STRING, "http://www.example.com/Bob");
-    static RyaType c = new RyaType(XMLSchema.STRING, "http://www.example.com/Carol");
-    static RyaType aIri = new RyaType(XMLSchema.ANYURI, "http://www.example.com/Alice");
-    static RyaType bIri = new RyaType(XMLSchema.ANYURI, "http://www.example.com/Bob");
+    static RyaType a = new RyaType(XSD.STRING, "http://www.example.com/Alice");
+    static RyaType b = new RyaType(XSD.STRING, "http://www.example.com/Bob");
+    static RyaType c = new RyaType(XSD.STRING, "http://www.example.com/Carol");
+    static RyaType aIri = new RyaType(XSD.ANYURI, "http://www.example.com/Alice");
+    static RyaType bIri = new RyaType(XSD.ANYURI, "http://www.example.com/Bob");
     static RyaType aLang = new RyaType(RDF.LANGSTRING, "http://www.example.com/Alice", "en");
     static RyaType aDiffLang = new RyaType(RDF.LANGSTRING, "http://www.example.com/Alice", "fr");
     static RyaType bLang = new RyaType(RDF.LANGSTRING, "http://www.example.com/Bob", "en");
-    RyaType nullData = new RyaType(XMLSchema.STRING, null);
+    RyaType nullData = new RyaType(XSD.STRING, null);
     RyaType nullType = new RyaType(null, "http://www.example.com/Alice");
     RyaType nullLang = new RyaType(RDF.LANGSTRING, "http://www.example.com/Alice", null);
     RyaType nullBoth = new RyaType(null, null);
-    RyaType same = new RyaType(XMLSchema.STRING, "http://www.example.com/Alice");
+    RyaType same = new RyaType(XSD.STRING, "http://www.example.com/Alice");
 
     @Test
     public void testCompareTo() throws Exception {
@@ -121,7 +121,7 @@ public class RyaTypeTest {
         Assert.assertEquals("Same data and same type should yield same hash code.",
                 a.hashCode(), same.hashCode());
         Assert.assertEquals("Same type and both null data should yield same hash code.",
-                nullData.hashCode(), new RyaType(XMLSchema.STRING, null).hashCode());
+                nullData.hashCode(), new RyaType(XSD.STRING, null).hashCode());
         Assert.assertEquals("Same data and both null type should yield same hash code.",
                 nullType.hashCode(), new RyaType(null, "http://www.example.com/Alice").hashCode());
         Assert.assertEquals("Null type and null data should yield same hash code.",

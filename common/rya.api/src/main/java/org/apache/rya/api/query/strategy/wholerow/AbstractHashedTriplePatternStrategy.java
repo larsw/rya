@@ -25,12 +25,11 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.rya.api.RdfCloudTripleStoreConstants;
 import org.apache.rya.api.query.strategy.AbstractTriplePatternStrategy;
-import org.apache.rya.api.query.strategy.TriplePatternStrategy;
 import org.apache.rya.api.resolver.triple.TripleRowRegex;
 
 import com.google.common.base.Preconditions;
 
-public abstract class AbstractHashedTriplePatternStrategy extends AbstractTriplePatternStrategy implements TriplePatternStrategy {
+public abstract class AbstractHashedTriplePatternStrategy extends AbstractTriplePatternStrategy {
     public static final String HASHED_ALL_REGEX = "([0-9a-f]{32})\u0000";
 
     @Override

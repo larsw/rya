@@ -27,13 +27,10 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.DynamicModel;
-import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Literals;
-import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 /**
  * Methods for converting values from their Rya object representations into
@@ -69,7 +66,7 @@ public class RyaToRdfConversions {
      * @return the {@link Literal} representation of the {@code ryaType}.
      */
     public static Literal convertLiteral(final RyaType ryaType) {
-        if (XMLSchema.STRING.equals(ryaType.getDataType())) {
+        if (XSD.STRING.equals(ryaType.getDataType())) {
             return VF.createLiteral(ryaType.getData());
         } else if (RDF.LANGSTRING.equals(ryaType.getDataType())) {
             final String data = ryaType.getData();
@@ -91,7 +88,7 @@ public class RyaToRdfConversions {
      */
     public static Value convertValue(final RyaType ryaType) {
         //assuming either IRI or Literal here
-        return (ryaType instanceof RyaIRI || ryaType.getDataType().equals(XMLSchema.ANYURI)) ? convertIRI(ryaType) : convertLiteral(ryaType);
+        return (ryaType instanceof RyaIRI || ryaType.getDataType().equals(XSD.ANYURI)) ? convertIRI(ryaType) : convertLiteral(ryaType);
     }
 
     /**

@@ -31,6 +31,10 @@ import org.eclipse.rdf4j.model.Value;
  */
 public class NullableStatementImpl implements Statement {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 746415398342274983L;
     private Resource subject;
     private IRI predicate;
     private Value object;

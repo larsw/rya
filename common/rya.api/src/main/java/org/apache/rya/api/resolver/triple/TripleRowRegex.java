@@ -19,10 +19,6 @@ package org.apache.rya.api.resolver.triple;
  * under the License.
  */
 
-
-
-import java.util.Arrays;
-
 /**
  * Date: 7/13/12
  * Time: 8:54 AM

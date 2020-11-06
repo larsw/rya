@@ -26,6 +26,9 @@ package org.apache.rya.api.resolver.triple;
  * Time: 7:35 AM
  */
 public class TripleRowResolverException extends Exception {
+
+    private static final long serialVersionUID = 3608004288180603626L;
+
     public TripleRowResolverException() {
     }
 

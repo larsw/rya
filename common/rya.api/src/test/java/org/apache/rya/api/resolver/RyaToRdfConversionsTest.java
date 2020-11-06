@@ -32,7 +32,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Literals;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -55,7 +55,7 @@ public class RyaToRdfConversionsTest {
         final String expectedData = "Ice Cream";
         final RyaType ryaType = new RyaType(null, expectedData);
         final Literal literal = RyaToRdfConversions.convertLiteral(ryaType);
-        final Literal expected = VF.createLiteral(expectedData, XMLSchema.STRING);
+        final Literal expected = VF.createLiteral(expectedData, XSD.STRING);
         assertEquals(expected, literal);
         assertFalse(literal.getLanguage().isPresent());
     }
@@ -116,9 +116,9 @@ public class RyaToRdfConversionsTest {
     @Test
     public void testConvertLiteral_normalString() {
         final String expectedData = "Hello";
-        final RyaType ryaType = new RyaType(XMLSchema.STRING, expectedData);
+        final RyaType ryaType = new RyaType(XSD.STRING, expectedData);
         final Literal literal = RyaToRdfConversions.convertLiteral(ryaType);
-        assertEquals(XMLSchema.STRING, literal.getDatatype());
+        assertEquals(XSD.STRING, literal.getDatatype());
         assertEquals(expectedData, literal.getLabel());
         assertFalse(literal.getLanguage().isPresent());
         final Literal expectedLiteral = VF.createLiteral(expectedData);

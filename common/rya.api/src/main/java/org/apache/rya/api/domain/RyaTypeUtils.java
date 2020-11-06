@@ -22,7 +22,7 @@ import java.util.Date;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleIRI;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -72,28 +72,28 @@ public final class RyaTypeUtils {
      * Creates a boolean {@link RyaType} object.
      * @param value the {@link Boolean} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#BOOLEAN} and the data set to the specified
+     * {@link XSD#BOOLEAN} and the data set to the specified
      * {@code value}.
      */
     public static RyaType booleanRyaType(final Boolean value) {
-        return new RyaType(XMLSchema.BOOLEAN, Boolean.toString(value));
+        return new RyaType(XSD.BOOLEAN, Boolean.toString(value));
     }
 
     /**
      * Creates a byte {@link RyaType} object.
      * @param value the {@link Byte} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#BYTE} and the data set to the specified {@code value}.
+     * {@link XSD#BYTE} and the data set to the specified {@code value}.
      */
     public static RyaType byteRyaType(final Byte value) {
-        return new RyaType(XMLSchema.BYTE, Byte.toString(value));
+        return new RyaType(XSD.BYTE, Byte.toString(value));
     }
 
     /**
      * Creates a date {@link RyaType} object.
      * @param value the {@link Date} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#DATETIME} and the data set to the specified
+     * {@link XSD#DATETIME} and the data set to the specified
      * {@code value}.
      */
     public static RyaType dateRyaType(final Date value) {
@@ -101,82 +101,82 @@ public final class RyaTypeUtils {
         final StringBuffer sb = new StringBuffer();
         ISODateTimeFormat.dateTime().withZone(DateTimeZone.UTC).printTo(sb, dateTime.getMillis());
         final String formattedDate = sb.toString();
-        return new RyaType(XMLSchema.DATE, formattedDate);
+        return new RyaType(XSD.DATE, formattedDate);
     }
 
     /**
      * Creates a date/time {@link RyaType} object.
      * @param value the {@link DateTime} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#DATETIME} and the data set to the specified
+     * {@link XSD#DATETIME} and the data set to the specified
      * {@code value}.
      */
     public static RyaType dateRyaType(final DateTime value) {
         final StringBuffer sb = new StringBuffer();
         ISODateTimeFormat.dateTime().withZone(DateTimeZone.UTC).printTo(sb, value.getMillis());
         final String formattedDate = sb.toString();
-        return new RyaType(XMLSchema.DATETIME, formattedDate);
+        return new RyaType(XSD.DATETIME, formattedDate);
     }
 
     /**
      * Creates a double {@link RyaType} object.
      * @param value the {@link Double} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#DOUBLE} and the data set to the specified {@code value}.
+     * {@link XSD#DOUBLE} and the data set to the specified {@code value}.
      */
     public static RyaType doubleRyaType(final Double value) {
-        return new RyaType(XMLSchema.DOUBLE, Double.toString(value));
+        return new RyaType(XSD.DOUBLE, Double.toString(value));
     }
 
     /**
      * Creates a float {@link RyaType} object.
      * @param value the {@link Float} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#FLOAT} and the data set to the specified {@code value}.
+     * {@link XSD#FLOAT} and the data set to the specified {@code value}.
      */
     public static RyaType floatRyaType(final Float value) {
-        return new RyaType(XMLSchema.FLOAT, Float.toString(value));
+        return new RyaType(XSD.FLOAT, Float.toString(value));
     }
 
     /**
      * Creates an integer {@link RyaType} object.
      * @param value the {@link Integer} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#INTEGER} and the data set to the specified
+     * {@link XSD#INTEGER} and the data set to the specified
      * {@code value}.
      */
     public static RyaType intRyaType(final Integer value) {
-        return new RyaType(XMLSchema.INTEGER, Integer.toString(value));
+        return new RyaType(XSD.INTEGER, Integer.toString(value));
     }
 
     /**
      * Creates a long {@link RyaType} object.
      * @param value the {@link Long} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#LONG} and the data set to the specified {@code value}.
+     * {@link XSD#LONG} and the data set to the specified {@code value}.
      */
     public static RyaType longRyaType(final Long value) {
-        return new RyaType(XMLSchema.LONG, Long.toString(value));
+        return new RyaType(XSD.LONG, Long.toString(value));
     }
 
     /**
      * Creates a short {@link RyaType} object.
      * @param value the {@link Short} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#SHORT} and the data set to the specified {@code value}.
+     * {@link XSD#SHORT} and the data set to the specified {@code value}.
      */
     public static RyaType shortRyaType(final Short value) {
-        return new RyaType(XMLSchema.SHORT, Short.toString(value));
+        return new RyaType(XSD.SHORT, Short.toString(value));
     }
 
     /**
      * Creates a string {@link RyaType} object.
      * @param value the {@link String} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#STRING} and the data set to the specified {@code value}.
+     * {@link XSD#STRING} and the data set to the specified {@code value}.
      */
     public static RyaType stringRyaType(final String value) {
-        return new RyaType(XMLSchema.STRING, value);
+        return new RyaType(XSD.STRING, value);
     }
 
     /**
@@ -184,10 +184,10 @@ public final class RyaTypeUtils {
      * Creates a IRI {@link RyaType} object.
      * @param value the {@link IRI} object.
      * @return the {@link RyaType} with the data type set to
-     * {@link XMLSchema#ANYURI} and the data set to the specified {@code value}.
+     * {@link XSD#ANYURI} and the data set to the specified {@code value}.
      */
     public static RyaType iriRyaType(final IRI value) {
-        return new RyaType(XMLSchema.ANYURI, value.stringValue());
+        return new RyaType(XSD.ANYURI, value.stringValue());
     }
 
     /**

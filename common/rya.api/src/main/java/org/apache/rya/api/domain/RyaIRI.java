@@ -21,8 +21,7 @@ package org.apache.rya.api.domain;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.URIUtil;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
-
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 /**
  * Date: 7/16/12
@@ -31,15 +30,15 @@ import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 public class RyaIRI extends RyaType {
 
     public RyaIRI() {
-        setDataType(XMLSchema.ANYURI);
+        setDataType(XSD.ANYURI);
     }
 
     public RyaIRI(String data) {
-        super(XMLSchema.ANYURI, data);
+        super(XSD.ANYURI, data);
     }
 
     public RyaIRI(String namespace, String data) {
-        super(XMLSchema.ANYURI, namespace + data);
+        super(XSD.ANYURI, namespace + data);
     }
 
     protected RyaIRI(IRI datatype, String data) {

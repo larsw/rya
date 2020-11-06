@@ -28,19 +28,15 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.rya.api.domain.RyaIRI;
 import org.apache.rya.api.domain.RyaType;
 import org.apache.rya.api.utils.LiteralLanguageUtils;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Triple;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleLiteral;
-import org.eclipse.rdf4j.model.impl.SimpleTriple;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Literals;
-import org.eclipse.rdf4j.model.util.Statements;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -68,7 +64,7 @@ public class RdfToRyaConversionsTest {
         // Don't think this is possible but test anyways. Need to mock to force this null value.
         when(literal.getDatatype()).thenReturn(null);
         final RyaType ryaType = RdfToRyaConversions.convertLiteral(literal);
-        final RyaType expected = new RyaType(XMLSchema.STRING, expectedData);
+        final RyaType expected = new RyaType(XSD.STRING, expectedData);
         assertEquals(expected, ryaType);
         assertNull(ryaType.getLanguage());
     }
@@ -128,9 +124,9 @@ public class RdfToRyaConversionsTest {
         final String expectedData = "Hello";
         final Literal literal = VF.createLiteral(expectedData);
         final RyaType ryaType = RdfToRyaConversions.convertLiteral(literal);
-        assertEquals(XMLSchema.STRING, ryaType.getDataType());
+        assertEquals(XSD.STRING, ryaType.getDataType());
         assertEquals(expectedData, ryaType.getData());
-        final RyaType expectedRyaType = new RyaType(XMLSchema.STRING, expectedData);
+        final RyaType expectedRyaType = new RyaType(XSD.STRING, expectedData);
         assertEquals(expectedRyaType, ryaType);
         assertNull(ryaType.getLanguage());
     }

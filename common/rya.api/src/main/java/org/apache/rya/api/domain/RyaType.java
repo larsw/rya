@@ -23,7 +23,7 @@ import java.util.Objects;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 /**
  * Base Rya Type
@@ -45,11 +45,11 @@ public class RyaType implements Comparable<RyaType> {
 
     /**
      * Creates a new instance of {@link RyaType} of type
-     * {@link XMLSchema#STRING} and with no language.
+     * {@link XSD#STRING} and with no language.
      * @param data the data string.
      */
     public RyaType(final String data) {
-        this(XMLSchema.STRING, data);
+        this(XSD.STRING, data);
     }
 
     /**

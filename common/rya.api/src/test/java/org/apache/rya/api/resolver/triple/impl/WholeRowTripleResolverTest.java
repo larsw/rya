@@ -19,11 +19,10 @@ package org.apache.rya.api.resolver.triple.impl;
  * under the License.
  */
 
-
-
 import junit.framework.TestCase;
 import org.apache.rya.api.RdfCloudTripleStoreConstants;
 import org.apache.rya.api.domain.RyaStatement;
+import org.apache.rya.api.domain.StatementMetadata;
 import org.apache.rya.api.domain.RyaIRI;
 import org.apache.rya.api.resolver.triple.TripleRow;
 import org.apache.rya.api.resolver.triple.TripleRowRegex;
@@ -46,8 +45,10 @@ public class WholeRowTripleResolverTest extends TestCase {
         RyaIRI pred = new RyaIRI("urn:test#pred");
         RyaIRI obj = new RyaIRI("urn:test#obj");
         RyaIRI cntxt = new RyaIRI("urn:test#cntxt");
-        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, null, null, 100l);
-        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, null, null, 100l);
+        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, new StatementMetadata(), null);
+        stmt.setTimestamp(100L);
+        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, new StatementMetadata(), null);
+        stmtContext.setTimestamp(100L);
 
         Map<RdfCloudTripleStoreConstants.TABLE_LAYOUT, TripleRow> serialize = tripleResolver.serialize(stmt);
         TripleRow tripleRow = serialize.get(RdfCloudTripleStoreConstants.TABLE_LAYOUT.SPO);
@@ -68,8 +69,10 @@ public class WholeRowTripleResolverTest extends TestCase {
         RyaIRI pred = new RyaIRI("urn:test#pred");
         RyaIRI obj = new RyaIRI("urn:test#obj");
         RyaIRI cntxt = new RyaIRI("urn:test#cntxt");
-        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, null, null, 100l);
-        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, null, null, 100l);
+        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, new StatementMetadata(), null);
+        stmt.setTimestamp(100L);
+        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, new StatementMetadata(), null);
+        stmtContext.setTimestamp(100L);
         Map<RdfCloudTripleStoreConstants.TABLE_LAYOUT, TripleRow> serialize = tripleResolver.serialize(stmt);
         TripleRow tripleRow = serialize.get(po);
         RyaStatement deserialize = tripleResolver.deserialize(po, tripleRow);
@@ -89,8 +92,10 @@ public class WholeRowTripleResolverTest extends TestCase {
         RyaIRI pred = new RyaIRI("urn:test#pred");
         RyaIRI obj = new RyaIRI("urn:test#obj");
         RyaIRI cntxt = new RyaIRI("urn:test#cntxt");
-        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, null, null, 100l);
-        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, null, null, 100l);
+        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, new StatementMetadata(), null);
+        stmt.setTimestamp(100L);
+        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, new StatementMetadata(), null);
+        stmtContext.setTimestamp(100L);
         Map<RdfCloudTripleStoreConstants.TABLE_LAYOUT, TripleRow> serialize = tripleResolver.serialize(stmt);
         TripleRow tripleRow = serialize.get(po);
         RyaStatement deserialize = tripleResolver.deserialize(po, tripleRow);
@@ -110,8 +115,10 @@ public class WholeRowTripleResolverTest extends TestCase {
         RyaIRI pred = new RyaIRI("urn:test#pred");
         RyaIRI obj = new RyaIRI("urn:test#obj");
         RyaIRI cntxt = new RyaIRI("urn:test#cntxt");
-        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, null, null, 100l);
-        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, null, null, 100l);
+        final RyaStatement stmt = new RyaStatement(subj, pred, obj, null, null, new StatementMetadata(), null);
+        stmt.setTimestamp(100L);
+        final RyaStatement stmtContext = new RyaStatement(subj, pred, obj, cntxt, null, new StatementMetadata(), null);
+        stmtContext.setTimestamp(100L);
         Map<RdfCloudTripleStoreConstants.TABLE_LAYOUT, TripleRow> serialize = tripleResolver.serialize(stmt);
         TripleRow tripleRow = serialize.get(po);
         RyaStatement deserialize = tripleResolver.deserialize(po, tripleRow);

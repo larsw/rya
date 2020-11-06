@@ -24,7 +24,7 @@ import org.calrissian.mango.types.LexiTypeEncoders;
 import org.calrissian.mango.types.TypeEncoder;
 import org.calrissian.mango.types.exception.TypeDecodingException;
 import org.calrissian.mango.types.exception.TypeEncodingException;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 public class BooleanRyaTypeResolver extends RyaTypeResolverImpl {
     public static final int BOOLEAN_LITERAL_MARKER = 10;
@@ -32,7 +32,7 @@ public class BooleanRyaTypeResolver extends RyaTypeResolverImpl {
             .booleanEncoder();
 
     public BooleanRyaTypeResolver() {
-        super((byte) BOOLEAN_LITERAL_MARKER, XMLSchema.BOOLEAN);
+        super((byte) BOOLEAN_LITERAL_MARKER, XSD.BOOLEAN);
     }
 
     @Override

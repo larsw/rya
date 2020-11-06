@@ -40,7 +40,7 @@ import org.apache.rya.api.resolver.RyaTripleContext;
 import org.apache.rya.api.resolver.triple.TripleRow;
 import org.apache.rya.api.resolver.triple.TripleRowRegex;
 import org.apache.rya.api.resolver.triple.impl.WholeRowTripleResolver;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import junit.framework.TestCase;
 
@@ -119,7 +119,7 @@ public class AbstractTriplePatternStrategyTest extends TestCase {
     public void testObjectTypeInfo() throws Exception {
         RyaIRI subj = new RyaIRI("urn:test#1234");
         RyaIRI pred = new RyaIRI("urn:test#pred");
-        RyaType obj = new RyaType(XMLSchema.LONG, "10");
+        RyaType obj = new RyaType(XSD.LONG, "10");
         RyaStatement ryaStatement = new RyaStatement(subj, pred, obj);
         Map<RdfCloudTripleStoreConstants.TABLE_LAYOUT, TripleRow> serialize = RyaTripleContext.getInstance(new MockRdfConfiguration()).serializeTriple(ryaStatement);
         TripleRow tripleRow = serialize.get(SPO);
@@ -139,7 +139,7 @@ public class AbstractTriplePatternStrategyTest extends TestCase {
 
         //build row with same object str data
         Map<RdfCloudTripleStoreConstants.TABLE_LAYOUT, TripleRow> dupTriple_str = RyaTripleContext.getInstance(new MockRdfConfiguration()).serializeTriple(
-                new RyaStatement(subj, pred, new RyaType(XMLSchema.STRING, objStr))
+                new RyaStatement(subj, pred, new RyaType(XSD.STRING, objStr))
         );
         TripleRow tripleRow_dup_str = dupTriple_str.get(SPO);
 
