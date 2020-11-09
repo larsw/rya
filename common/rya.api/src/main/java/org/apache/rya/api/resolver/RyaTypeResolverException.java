@@ -26,11 +26,6 @@ package org.apache.rya.api.resolver;
  * Time: 12:09 PM
  */
 public class RyaTypeResolverException extends Exception {
-    /**
-     *
-     */
-    private static final long serialVersionUID = -8951686019600934672L;
-
     public RyaTypeResolverException() {
     }
 

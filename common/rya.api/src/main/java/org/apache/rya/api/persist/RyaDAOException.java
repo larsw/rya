@@ -26,9 +26,6 @@ package org.apache.rya.api.persist;
  * Time: 8:20 AM
  */
 public class RyaDAOException extends Exception {
-
-    private static final long serialVersionUID = -5615488476856828782L;
-
     public RyaDAOException() {
     }
 

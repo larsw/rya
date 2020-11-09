@@ -24,7 +24,7 @@ import org.calrissian.mango.types.LexiTypeEncoders;
 import org.calrissian.mango.types.TypeEncoder;
 import org.calrissian.mango.types.exception.TypeDecodingException;
 import org.calrissian.mango.types.exception.TypeEncodingException;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 /**
  */
@@ -33,7 +33,7 @@ public class FloatRyaTypeResolver extends RyaTypeResolverImpl {
     public static final TypeEncoder<Float, String> FLOAT_TYPE_ENCODER = LexiTypeEncoders.floatEncoder();
 
     public FloatRyaTypeResolver() {
-        super((byte) FLOAT_LITERAL_MARKER, XSD.FLOAT);
+        super((byte) FLOAT_LITERAL_MARKER, XMLSchema.FLOAT);
     }
 
     @Override

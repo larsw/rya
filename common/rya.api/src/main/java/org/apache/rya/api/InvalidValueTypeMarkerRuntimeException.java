@@ -27,9 +27,6 @@ package org.apache.rya.api;
  * Time: 12:58:27 PM
  */
 public class InvalidValueTypeMarkerRuntimeException extends RuntimeException {
-
-    private static final long serialVersionUID = 6364557800838690730L;
-
     private int valueTypeMarker = -1;
 
     public InvalidValueTypeMarkerRuntimeException(int valueTypeMarker) {

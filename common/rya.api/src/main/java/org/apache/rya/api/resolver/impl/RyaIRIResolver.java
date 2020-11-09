@@ -21,7 +21,7 @@ package org.apache.rya.api.resolver.impl;
 
 import org.apache.rya.api.domain.RyaType;
 import org.apache.rya.api.domain.RyaIRI;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 /**
  * Date: 7/16/12
@@ -32,7 +32,7 @@ public class RyaIRIResolver extends RyaTypeResolverImpl {
     public static final int URI_MARKER = 2;
 
     public RyaIRIResolver() {
-        super((byte) URI_MARKER, XSD.ANYURI);
+        super((byte) URI_MARKER, XMLSchema.ANYURI);
     }
 
     @Override

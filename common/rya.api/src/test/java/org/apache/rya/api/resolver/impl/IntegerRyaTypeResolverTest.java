@@ -22,7 +22,7 @@ package org.apache.rya.api.resolver.impl;
 import java.util.Random;
 
 import org.apache.rya.api.domain.RyaType;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 import junit.framework.TestCase;
 
@@ -33,7 +33,7 @@ import junit.framework.TestCase;
 public class IntegerRyaTypeResolverTest extends TestCase {
     public void testIntegerSerialization() throws Exception {
         Integer i = randomInt();
-        byte[] serialize = new IntegerRyaTypeResolver().serialize(new RyaType(XSD.INTEGER, i.toString()));
+        byte[] serialize = new IntegerRyaTypeResolver().serialize(new RyaType(XMLSchema.INTEGER, i.toString()));
         assertEquals(i, new Integer(new IntegerRyaTypeResolver().deserialize(serialize).getData()));
     }
 

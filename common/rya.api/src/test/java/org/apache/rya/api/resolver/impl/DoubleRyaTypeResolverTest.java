@@ -23,7 +23,7 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 import org.apache.rya.api.domain.RyaType;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 /**
  * Date: 7/20/12
@@ -33,7 +33,7 @@ public class DoubleRyaTypeResolverTest extends TestCase {
 
     public void testDoubleSerialization() throws Exception {
         Double d = randomDouble();
-        RyaType ryaType = new RyaType(XSD.DOUBLE, d.toString());
+        RyaType ryaType = new RyaType(XMLSchema.DOUBLE, d.toString());
         byte[] serialize = new DoubleRyaTypeResolver().serialize(ryaType);
         assertEquals(d, Double.parseDouble(new DoubleRyaTypeResolver().deserialize(serialize).getData()));
     }

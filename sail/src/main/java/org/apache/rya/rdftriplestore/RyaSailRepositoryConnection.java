@@ -57,6 +57,7 @@ public class RyaSailRepositoryConnection extends SailRepositoryConnection {
     public void add(final InputStream in, final String baseURI, final RDFFormat dataFormat, final Resource... contexts) throws IOException, RDFParseException,
             RepositoryException {
         OpenRDFUtil.verifyContextNotNull(contexts);
+
         final CombineContextsRdfInserter rdfInserter = new CombineContextsRdfInserter(this);
         rdfInserter.enforceContext(contexts);
 

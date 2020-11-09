@@ -31,7 +31,6 @@ import java.util.Map;
 import org.apache.rya.api.RdfCloudTripleStoreConstants.TABLE_LAYOUT;
 import org.apache.rya.api.domain.RyaStatement;
 import org.apache.rya.api.domain.RyaType;
-import org.apache.rya.api.domain.StatementMetadata;
 import org.apache.rya.api.domain.RyaIRI;
 import org.apache.rya.api.resolver.RyaContext;
 import org.apache.rya.api.resolver.RyaTypeResolverException;
@@ -59,7 +58,7 @@ public class WholeRowTripleResolver implements TripleRowResolver {
             final byte[] columnVisibility = stmt.getColumnVisibility();
             final String qualifer = stmt.getQualifer();
             final byte[] qualBytes = qualifer == null ? EMPTY_BYTES : qualifer.getBytes(StandardCharsets.UTF_8);
-            final byte[] value = stmt.getMetadata().toBytes();// .getValue();
+            final byte[] value = stmt.getValue();
             assert subject != null && predicate != null && object != null;
             final byte[] cf = (context == null) ? EMPTY_BYTES : context.getData().getBytes(StandardCharsets.UTF_8);
             final Map<TABLE_LAYOUT, TripleRow> tripleRowMap = new HashMap<TABLE_LAYOUT, TripleRow>();
@@ -107,38 +106,31 @@ public class WholeRowTripleResolver implements TripleRowResolver {
             final Long timestamp = tripleRow.getTimestamp();
             final byte[] columnVisibility = tripleRow.getColumnVisibility();
             final byte[] value = tripleRow.getValue();
-            final StatementMetadata metadata = new StatementMetadata(value);
 
             switch (table_layout) {
                 case SPO: {
                     final byte[] obj = Bytes.concat(third, type);
-                    final RyaStatement stmt = new RyaStatement(
+                    return new RyaStatement(
                             new RyaIRI(new String(first, StandardCharsets.UTF_8)),
                             new RyaIRI(new String(second, StandardCharsets.UTF_8)),
                             RyaContext.getInstance().deserialize(obj),
-                            context, qualifier, metadata, columnVisibility);
-                    stmt.setTimestamp(timestamp);
-                    return stmt;
+                            context, qualifier, columnVisibility, value, timestamp);
                 }
                 case PO: {
                     final byte[] obj = Bytes.concat(second, type);
-                    final RyaStatement stmt = new RyaStatement(
+                    return new RyaStatement(
                             new RyaIRI(new String(third, StandardCharsets.UTF_8)),
                             new RyaIRI(new String(first, StandardCharsets.UTF_8)),
                             RyaContext.getInstance().deserialize(obj),
-                            context, qualifier, metadata, columnVisibility);
-                    stmt.setTimestamp(timestamp);
-                    return stmt;
+                            context, qualifier, columnVisibility, value, timestamp);
                 }
                 case OSP: {
                     final byte[] obj = Bytes.concat(first, type);
-                    final RyaStatement stmt = new RyaStatement(
+                    return new RyaStatement(
                             new RyaIRI(new String(second, StandardCharsets.UTF_8)),
                             new RyaIRI(new String(third, StandardCharsets.UTF_8)),
                             RyaContext.getInstance().deserialize(obj),
-                            context, qualifier, metadata, columnVisibility);
-                    stmt.setTimestamp(timestamp);
-                    return stmt;
+                            context, qualifier, columnVisibility, value, timestamp);
                 }
             }
         } catch (final RyaTypeResolverException e) {

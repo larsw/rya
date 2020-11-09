@@ -42,13 +42,13 @@ public class RyaQueryOptions {
     protected RdfCloudTripleStoreConfiguration conf;
 
     public static class RyaOptionsBuilder<T extends RyaOptionsBuilder> {
-        private final RyaQueryOptions options;
+        private RyaQueryOptions options;
 
-        public RyaOptionsBuilder(final RyaQueryOptions query) {
+        public RyaOptionsBuilder(RyaQueryOptions query) {
             this.options = query;
         }
 
-        public T load(final RdfCloudTripleStoreConfiguration conf) {
+        public T load(RdfCloudTripleStoreConfiguration conf) {
         	options.setConf(conf);
             return (T) this.setAuths(conf.getAuths())
                     .setBatchSize(conf.getBatchSize())
@@ -61,47 +61,47 @@ public class RyaQueryOptions {
                     .setTtl(conf.getTtl());
         }
 
-        public T setAuths(final String[] auths) {
+        public T setAuths(String[] auths) {
             options.setAuths(auths);
             return (T) this;
         }
 
-        public T setRegexObject(final String regexObject) {
+        public T setRegexObject(String regexObject) {
             options.setRegexObject(regexObject);
             return (T) this;
         }
 
-        public T setRegexPredicate(final String regexPredicate) {
+        public T setRegexPredicate(String regexPredicate) {
             options.setRegexPredicate(regexPredicate);
             return (T) this;
         }
 
-        public T setRegexSubject(final String regexSubject) {
+        public T setRegexSubject(String regexSubject) {
             options.setRegexSubject(regexSubject);
             return (T) this;
         }
 
-        public T setBatchSize(final Integer batchSize) {
+        public T setBatchSize(Integer batchSize) {
             options.setBatchSize(batchSize);
             return (T) this;
         }
 
-        public T setNumQueryThreads(final Integer numQueryThreads) {
+        public T setNumQueryThreads(Integer numQueryThreads) {
             options.setNumQueryThreads(numQueryThreads);
             return (T) this;
         }
 
-        public T setMaxResults(final Long maxResults) {
+        public T setMaxResults(Long maxResults) {
             options.setMaxResults(maxResults);
             return (T) this;
         }
 
-        public T setCurrentTime(final Long currentTime) {
+        public T setCurrentTime(Long currentTime) {
             options.setCurrentTime(currentTime);
             return (T) this;
         }
 
-        public T setTtl(final Long ttl) {
+        public T setTtl(Long ttl) {
             options.setTtl(ttl);
             return (T) this;
         }
@@ -111,7 +111,7 @@ public class RyaQueryOptions {
     	return conf;
     }
 
-    public void setConf(final RdfCloudTripleStoreConfiguration conf) {
+    public void setConf(RdfCloudTripleStoreConfiguration conf) {
     	this.conf = conf;
     }
 
@@ -119,7 +119,7 @@ public class RyaQueryOptions {
         return ttl;
     }
 
-    public void setTtl(final Long ttl) {
+    public void setTtl(Long ttl) {
         this.ttl = ttl;
     }
 
@@ -127,7 +127,7 @@ public class RyaQueryOptions {
         return currentTime;
     }
 
-    public void setCurrentTime(final Long currentTime) {
+    public void setCurrentTime(Long currentTime) {
         this.currentTime = currentTime;
     }
 
@@ -135,7 +135,7 @@ public class RyaQueryOptions {
         return numQueryThreads;
     }
 
-    public void setNumQueryThreads(final Integer numQueryThreads) {
+    public void setNumQueryThreads(Integer numQueryThreads) {
         this.numQueryThreads = numQueryThreads;
     }
 
@@ -143,7 +143,7 @@ public class RyaQueryOptions {
         return maxResults;
     }
 
-    public void setMaxResults(final Long maxResults) {
+    public void setMaxResults(Long maxResults) {
         this.maxResults = maxResults;
     }
 
@@ -151,7 +151,7 @@ public class RyaQueryOptions {
         return batchSize;
     }
 
-    public void setBatchSize(final Integer batchSize) {
+    public void setBatchSize(Integer batchSize) {
         this.batchSize = batchSize;
     }
 
@@ -159,7 +159,7 @@ public class RyaQueryOptions {
         return regexSubject;
     }
 
-    public void setRegexSubject(final String regexSubject) {
+    public void setRegexSubject(String regexSubject) {
         this.regexSubject = regexSubject;
     }
 
@@ -167,7 +167,7 @@ public class RyaQueryOptions {
         return regexPredicate;
     }
 
-    public void setRegexPredicate(final String regexPredicate) {
+    public void setRegexPredicate(String regexPredicate) {
         this.regexPredicate = regexPredicate;
     }
 
@@ -175,7 +175,7 @@ public class RyaQueryOptions {
         return regexObject;
     }
 
-    public void setRegexObject(final String regexObject) {
+    public void setRegexObject(String regexObject) {
         this.regexObject = regexObject;
     }
 
@@ -183,7 +183,7 @@ public class RyaQueryOptions {
         return auths;
     }
 
-    public void setAuths(final String[] auths) {
+    public void setAuths(String[] auths) {
         if (auths == null) {
             this.auths = new String[0];
         } else {
@@ -207,11 +207,11 @@ public class RyaQueryOptions {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final RyaQueryOptions that = (RyaQueryOptions) o;
+        RyaQueryOptions that = (RyaQueryOptions) o;
 
         if (!Arrays.equals(auths, that.auths)) return false;
         if (batchSize != null ? !batchSize.equals(that.batchSize) : that.batchSize != null) return false;

@@ -24,7 +24,7 @@ import org.calrissian.mango.types.LexiTypeEncoders;
 import org.calrissian.mango.types.TypeEncoder;
 import org.calrissian.mango.types.exception.TypeDecodingException;
 import org.calrissian.mango.types.exception.TypeEncodingException;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 /**
  * Date: 7/20/12
@@ -36,7 +36,7 @@ public class LongRyaTypeResolver extends RyaTypeResolverImpl {
             .longEncoder();
 
     public LongRyaTypeResolver() {
-        super((byte) LONG_LITERAL_MARKER, XSD.LONG);
+        super((byte) LONG_LITERAL_MARKER, XMLSchema.LONG);
     }
 
     @Override

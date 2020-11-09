@@ -27,9 +27,6 @@ package org.apache.rya.api.persist;
  * Time: 3:39:36 PM
  */
 public class RdfDAOException extends RuntimeException {
-
-    private static final long serialVersionUID = -5794606240736029894L;
-
     public RdfDAOException() {
     }
 

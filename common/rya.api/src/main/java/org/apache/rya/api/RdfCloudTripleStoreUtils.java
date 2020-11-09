@@ -237,7 +237,7 @@ public class RdfCloudTripleStoreUtils {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            CustomEntry<?,?> that = (CustomEntry<?, ?>) o;
+            CustomEntry that = (CustomEntry) o;
 
             if (key != null ? !key.equals(that.key) : that.key != null) return false;
             return value != null ? value.equals(that.value) : that.value == null;

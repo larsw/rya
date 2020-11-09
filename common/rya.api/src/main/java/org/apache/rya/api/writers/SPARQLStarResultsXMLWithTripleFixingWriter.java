@@ -53,7 +53,7 @@ public class SPARQLStarResultsXMLWithTripleFixingWriter extends SPARQLStarResult
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
+        //noinspection unchecked
         namespaceTable = (Map<String, String>)obj;
         return namespaceTable;
     }

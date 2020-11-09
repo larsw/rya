@@ -29,9 +29,6 @@ import org.eclipse.rdf4j.model.impl.SimpleIRI;
  * guarantee that the subject exists, just that there is an Edge to it.
  */
 public class Node extends SimpleIRI {
-
-    private static final long serialVersionUID = 4798312884547566680L;
-
     public Node() {
     }
 

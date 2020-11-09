@@ -20,11 +20,10 @@ package org.apache.rya.api.domain.serialization.kryo;
 
 import org.apache.rya.api.domain.RyaStatement;
 import org.apache.rya.api.domain.RyaType;
-import org.apache.rya.api.domain.StatementMetadata;
 import org.apache.rya.api.domain.RyaIRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
@@ -74,11 +73,10 @@ public class RyaStatementSerializer extends Serializer<RyaStatement> {
         if(shouldWrite){
             output.writeLong(object.getTimestamp());
         }
-        byte[] value = object.getMetadata().toBytes();
-        shouldWrite = value != null;
+        shouldWrite = object.getValue() != null;
         output.writeBoolean(shouldWrite);
         if(shouldWrite){
-            output.writeBytes(value);
+            output.writeBytes(object.getValue());
         }
     }   
 
@@ -116,7 +114,7 @@ public class RyaStatementSerializer extends Serializer<RyaStatement> {
         String objectType = input.readString();
         String objectValue = input.readString();
         RyaType value;
-        if (objectType.equals(XSD.ANYURI.toString())){
+        if (objectType.equals(XMLSchema.ANYURI.toString())){
             value = new RyaIRI(objectValue);
         }
         else {
@@ -144,7 +142,7 @@ public class RyaStatementSerializer extends Serializer<RyaStatement> {
         hasNextValue = input.readBoolean();
         if (hasNextValue){
             length = input.readInt();
-            statement.setStatementMetadata(new StatementMetadata(input.readBytes(length)));
+            statement.setValue(input.readBytes(length));
         }
 
         return statement;

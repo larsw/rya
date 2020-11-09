@@ -36,7 +36,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.junit.Test;
 
 /**
@@ -48,11 +48,11 @@ import org.junit.Test;
  * 		- uncertainty: missing milliseconds (.123) become .000.
  * 		- uncertainty: missing timezone becomes the system local timezone.
  * 		- timezone: converted to the equivalent Z timezone.  
- * 		- a type XSD.DATE become XSD.DATETIME after deserialized
+ * 		- a type XMLSchema.DATE become XMLSchema.DATETIME after deserialized
  * 
  * 		ex: run in timezone eastern time (GMT-5:00): 
- * 			before=       2000-02-02                 type = XSD.DATE
- * 			deserialized= 2000-02-02T05:00:00.000Z   type = XSD.DATETIME
+ * 			before=       2000-02-02                 type = XMLSchema.DATE
+ * 			deserialized= 2000-02-02T05:00:00.000Z   type = XMLSchema.DATETIME
  */
 public class DateTimeRyaTypeResolverTest {
     private static final ValueFactory VF = SimpleValueFactory.getInstance();
@@ -68,12 +68,13 @@ public class DateTimeRyaTypeResolverTest {
         byte[] serialize = new DateTimeRyaTypeResolver().serialize(RdfToRyaConversions.convertLiteral(literal));
         RyaType deserialize = new DateTimeRyaTypeResolver().deserialize(serialize);
         assertEquals("2012-07-13T12:31:29.285Z", deserialize.getData());
-        assertEquals(XSD.DATETIME, deserialize.getDataType());
+        assertEquals(XMLSchema.DATETIME, deserialize.getDataType());
     }
 	@Test
     public void testFull() throws Exception {
         String currentTime = "2000-01-01T00:00:01.111Z";
-		assertSerializeAndDesDateTime(currentTime);
+		assertSerializeAndDesDateTime("2000-01-01T00:00:01.111Z");
+		
     }
 	@Test
     public void testNoMilliSeconds() throws Exception {
@@ -84,10 +85,10 @@ public class DateTimeRyaTypeResolverTest {
     public void testDateNoTimeNoZone() throws Exception {
         String beforeDate = "2000-02-02";
     	String afterDate="2000-02-0(1|2|3)T\\d\\d:\\d\\d:00\\.000Z";
-    	RyaType deserialize = serializeAndDeserialize(beforeDate, XSD.DATE);
+    	RyaType deserialize = serializeAndDeserialize(beforeDate, XMLSchema.DATE);
 	    final String afterActual = deserialize.getData();
 		assertTrue("Before='"+beforeDate+"'; Expected should match actual regex after='"+afterDate+"' deserialized:"+afterActual, afterActual.matches(afterDate));
-        assertEquals(XSD.DATETIME, deserialize.getDataType());
+        assertEquals(XMLSchema.DATETIME, deserialize.getDataType());
     }
 	@Test
     public void testDateZoneNoTime() throws Exception {
@@ -95,28 +96,28 @@ public class DateTimeRyaTypeResolverTest {
 		//java.lang.IllegalArgumentException: Invalid format: "2000-02-02Z" is malformed at "Z"
 		// use this: "2000-02-02TZ";
         String currentTime = "2000-02-02TZ";
-    	RyaType deserialize = serializeAndDeserialize(currentTime, XSD.DATE);
+    	RyaType deserialize = serializeAndDeserialize(currentTime, XMLSchema.DATE);
         assertEquals("Before expected should match after actual deserialized:","2000-02-02T00:00:00.000Z", deserialize.getData());
-        assertEquals(XSD.DATETIME, deserialize.getDataType());
+        assertEquals(XMLSchema.DATETIME, deserialize.getDataType());
     }
 	@Test
     public void testNoZone() throws Exception {
 		String beforeDate = "2000-01-02T00:00:01";
     	String afterDate="2000-01-0(1|2|3)T\\d\\d:\\d\\d:01\\.000Z";
-    	RyaType deserialize = serializeAndDeserialize(beforeDate, XSD.DATE);
+    	RyaType deserialize = serializeAndDeserialize(beforeDate, XMLSchema.DATE);
 	    final String afterActual = deserialize.getData();
 		assertTrue("Before='"+beforeDate+"'; Expected should match actual regex after='"+afterDate+"' deserialized:"+afterActual, afterActual.matches(afterDate));
-        assertEquals(XSD.DATETIME, deserialize.getDataType());
+        assertEquals(XMLSchema.DATETIME, deserialize.getDataType());
 		
     }
     @Test
 	public void testMilliSecondsNoZone() throws Exception {
     	String beforeDate="2002-02-02T02:02:02.222";
 	String afterDate="2002-02-0(1|2|3)T\\d\\d:\\d\\d:02\\.222.*";
-		RyaType deserialize = serializeAndDeserialize(beforeDate, XSD.DATETIME);
+		RyaType deserialize = serializeAndDeserialize(beforeDate, XMLSchema.DATETIME);
 	    final String afterActual = deserialize.getData();
 		assertTrue("Before='"+beforeDate+"'; Expected should match actual regex after='"+afterDate+"' deserialized:"+afterActual, afterActual.matches(afterDate));
-	    assertEquals(XSD.DATETIME, deserialize.getDataType());
+	    assertEquals(XMLSchema.DATETIME, deserialize.getDataType());
 		
 	}
     @Test
@@ -139,7 +140,7 @@ public class DateTimeRyaTypeResolverTest {
     @Test
     public void testGarbageIn() throws Exception {
         String currentTime = "Blablabla";
-		RyaType ryaType = new RyaType(XSD.DATETIME, currentTime );
+		RyaType ryaType = new RyaType(XMLSchema.DATETIME, currentTime );
 		Throwable threw=null;
 		try {
 			new DateTimeRyaTypeResolver().serialize(ryaType);
@@ -158,20 +159,20 @@ public class DateTimeRyaTypeResolverTest {
 		assertSerializeAndDesDateTime(dateTimeString, dateTimeString); 
 	}
 	private void assertSerializeAndDesDateTime(String beforeDate, String afterDate ) throws RyaTypeResolverException {
-		RyaType deserialize = serializeAndDeserialize(beforeDate, XSD.DATETIME);
+		RyaType deserialize = serializeAndDeserialize(beforeDate, XMLSchema.DATETIME);
 	    assertEquals("Before='"+beforeDate+"'; Expected should match actual after deserialized:",afterDate, deserialize.getData());
-	    assertEquals(XSD.DATETIME, deserialize.getDataType());
+	    assertEquals(XMLSchema.DATETIME, deserialize.getDataType());
 	}
 	/**
 	 * Serialize a datetime string, then deserialize as a ryaType.
 	 * @param dateTimeString
-	 * @param type if null , use default: XSD.DATETIME
+	 * @param type if null , use default: XMLSchema.DATETIME
 	 * @return
 	 * @throws RyaTypeResolverException
 	 */
 	private RyaType serializeAndDeserialize(String dateTimeString,  IRI type ) throws RyaTypeResolverException {
 		if (type == null) 
-			type = XSD.DATETIME;
+			type = XMLSchema.DATETIME;
 		RyaType ryaType = new RyaType(type, dateTimeString ); 
 	    byte[] serialize = new DateTimeRyaTypeResolver().serialize(ryaType);
 	    return new DateTimeRyaTypeResolver().deserialize(serialize);

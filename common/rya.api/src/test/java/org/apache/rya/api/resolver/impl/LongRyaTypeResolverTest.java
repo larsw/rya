@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Random;
 
 import org.apache.rya.api.domain.RyaType;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.junit.Test;
 
 /**
@@ -36,7 +36,7 @@ public class LongRyaTypeResolverTest {
     @Test
     public void testSerialization() throws Exception {
         Long i = randomLong();
-        byte[] serialize = new LongRyaTypeResolver().serialize(new RyaType(XSD.LONG, i.toString()));
+        byte[] serialize = new LongRyaTypeResolver().serialize(new RyaType(XMLSchema.LONG, i.toString()));
         assertEquals(i, new Long(new LongRyaTypeResolver().deserialize(serialize).getData()));
     }
 

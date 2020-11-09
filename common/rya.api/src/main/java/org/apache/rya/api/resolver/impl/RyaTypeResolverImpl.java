@@ -33,7 +33,7 @@ import org.calrissian.mango.types.TypeEncoder;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Literals;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 import com.google.common.primitives.Bytes;
 
@@ -51,7 +51,7 @@ public class RyaTypeResolverImpl implements RyaTypeResolver {
     protected byte[] markerBytes;
 
     public RyaTypeResolverImpl() {
-        this((byte) PLAIN_LITERAL_MARKER, XSD.STRING);
+        this((byte) PLAIN_LITERAL_MARKER, XMLSchema.STRING);
     }
 
     public RyaTypeResolverImpl(final byte markerByte, final IRI dataType) {

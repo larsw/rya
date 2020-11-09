@@ -38,7 +38,7 @@ import org.apache.rya.api.resolver.impl.RyaIRIResolver;
 import org.apache.rya.api.resolver.impl.ServiceBackedRyaTypeResolverMappings;
 import org.apache.rya.api.resolver.impl.ShortRyaTypeResolver;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class RyaContext {
         addRyaTypeResolverMapping(new RyaTypeResolverMapping(new ByteRyaTypeResolver())); // byte
 
         //int is integer
-        uriToResolver.put(XSD.INT, new IntegerRyaTypeResolver());
+        uriToResolver.put(XMLSchema.INT, new IntegerRyaTypeResolver());
 
         //add service loaded mappings
         addRyaTypeResolverMappings(new ServiceBackedRyaTypeResolverMappings().getResolvers());
