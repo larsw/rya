@@ -6,6 +6,7 @@ import org.apache.rya.web2.converters.SparqlStarJsonMessageConverter;
 import org.apache.rya.web2.converters.SparqlStarXmlMessageConverter;
 import org.apache.rya.web2.converters.SparqlXmlMessageConverter;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -22,13 +23,15 @@ import java.util.*;
 @Configuration
 public class RestApiConfig implements WebMvcConfigurer {
 
+    @Value("${cors.allowedOrigins}")
+    private String allowedOrigins;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods(HttpMethod.POST.name(), HttpMethod.GET.name())
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods("*")
                 .allowCredentials(true);
-
     }
 
     static final Map<String, MediaType> mediaTypes = new HashMap<>();
@@ -37,6 +40,7 @@ public class RestApiConfig implements WebMvcConfigurer {
         mediaTypes.put(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.SPARQL_STAR.getDefaultMIMEType()));
         mediaTypes.put(TupleQueryResultFormat.JSON.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.JSON.getDefaultMIMEType()));
         mediaTypes.put(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType(), MediaType.valueOf(TupleQueryResultFormat.JSON_STAR.getDefaultMIMEType()));
+        mediaTypes.put("application/json", MediaType.valueOf("application/json"));
     }
 
     @Override
@@ -47,10 +51,10 @@ public class RestApiConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new MappingJackson2HttpMessageConverter());
         converters.add(new SparqlJsonMessageConverter());
         converters.add(new SparqlStarJsonMessageConverter());
         converters.add(new SparqlXmlMessageConverter());
         converters.add(new SparqlStarXmlMessageConverter());
+        converters.add(new MappingJackson2HttpMessageConverter());
     }
 }

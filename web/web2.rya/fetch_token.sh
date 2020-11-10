@@ -2,17 +2,19 @@
 
 set -e
 
+PROTOCOL=https
 SERVER=keycloak.localhost
-PORT=80
+PORT=443
 REALM=rya
 CLIENT_ID=sparql-frontend
-CLIENT_SECRET=615c76ee-7400-40ef-bf1c-72917d16e69b
 USERNAME=a-user
 PASSWORD=a-user
 SCOPES="sparql:query sparql:update keywords"
 
+TOKEN_ENDPOINT="$PROTOCOL://$SERVER:$PORT/auth/realms/$REALM/protocol/openid-connect/token"
+
 curl -s \
-     -X POST \
+     -k \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -d "grant_type=password" \
      -d "response_type=token" \
@@ -21,5 +23,5 @@ curl -s \
      -d "username=$USERNAME" \
      -d "password=$PASSWORD" \
      -d "scope=$SCOPES" \
-     "http://$SERVER:$PORT/auth/realms/$REALM/protocol/openid-connect/token" \ | jq -r .access_token
+     $TOKEN_ENDPOINT | jq -r .access_token
 

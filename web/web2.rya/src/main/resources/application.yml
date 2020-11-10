@@ -1,21 +1,34 @@
 server:
-  port: 8081
+  port: 8443
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:rya.localhost.p12
+    key-alias: rya
+    key-store-password: ryarya
+
+cors:
+  allowedOrigins: https://localhost:8082
 
 spring:
+  mvc:
+    log-request-details:true
+
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak.localhost/auth/realms/rya
-          jwk-set-uri: http://keycloak.localhost/auth/realms/rya/protocol/openid-connect/certs
+          issuer-uri: https://keycloak.localhost/auth/realms/rya
+          jwk-set-uri: https://keycloak.localhost/auth/realms/rya/protocol/openid-connect/certs
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      
+
 debug: true
 logging:
   level:
     "org.apache.rya.web2.controllers": DEBUG
+    "logging.level.org.springframework.web": DEBUG
 
 database:
   implementation: accumulo

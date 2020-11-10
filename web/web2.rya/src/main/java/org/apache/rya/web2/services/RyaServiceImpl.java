@@ -35,10 +35,8 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.*;
 
@@ -69,7 +67,6 @@ public class RyaServiceImpl implements RyaService {
 
         try {
             connection = repository.getConnection();
-
             if (StringUtils.isEmpty(query)) {
                 throw new InvalidQueryException("The query is empty.");
             }
@@ -80,8 +77,8 @@ public class RyaServiceImpl implements RyaService {
                     return performQuery(query, connection, authorizations, infer, noOutput);
                 } else if (operation instanceof ParsedUpdate) {
                     // Perform Update Query
-                    performUpdate(query, connection, infer, visibility.orElse(null));
-                    return new UpdateDummyResult();
+                    String updateTime = performUpdate(query, connection, infer, visibility.orElse(null));
+                    return new UpdateResult(updateTime);
                 } else {
                     throw new MalformedQueryException("Cannot process query. Query type not supported.");
                 }
@@ -90,13 +87,14 @@ public class RyaServiceImpl implements RyaService {
             logger.error("Error running query", e);
             throw new RuntimeException(e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (final RepositoryException e) {
-                    logger.error("Error closing connection", e);
-                }
-            }
+            // TODO !!!
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (final RepositoryException e) {
+//                    logger.error("Error closing connection", e);
+//                }
+//            }
             timer.cancel();
         }
     }
@@ -118,6 +116,7 @@ public class RyaServiceImpl implements RyaService {
             //            logger.info(String.format("Query Time = %.3f   Result Count = %s\n",
 //                                   (System.currentTimeMillis() - startTime) / 1000.,
 //                                   sparqlWriter.getCount()));
+
             return tupleQuery.evaluate();
         }
     }
@@ -142,13 +141,15 @@ public class RyaServiceImpl implements RyaService {
         }
     }
 
-    protected void performUpdate(final String query,
+    protected String performUpdate(final String query,
                                  final SailRepositoryConnection connection,
                                  final Boolean infer,
                                  final String visibility) throws RepositoryException, MalformedQueryException, InvalidQueryException {
         final Update update = connection.prepareUpdate(QueryLanguage.SPARQL, query);
         if (infer) {
             update.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(true));
+        } else {
+            update.removeBinding(RdfCloudTripleStoreConfiguration.CONF_INFER);
         }
 
         if (connection.getSailConnection() instanceof RdfCloudTripleStoreConnection && visibility != null) {
@@ -166,15 +167,21 @@ public class RyaServiceImpl implements RyaService {
             throw new InvalidQueryException(StringEscapeUtils.escapeHtml4(query));
         }
 
-        logger.info(String.format("Update Time = %.3f\n", (System.currentTimeMillis() - startTime) / 1000.));
+        String updateTime = String.format("Update Time = %.3f\n", (System.currentTimeMillis() - startTime) / 1000.);
+        logger.info(updateTime);
+        return updateTime;
     }
 
-    private void initAuthorizationsAndInference(String auth, Boolean infer, Query graphQuery) {
+    private void initAuthorizationsAndInference(String auth, Boolean infer, Query query) {
         if (auth != null && auth.length() > 0) {
-            graphQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH, VALUE_FACTORY.createLiteral(auth));
+            query.setBinding(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH, VALUE_FACTORY.createLiteral(auth));
+        } else {
+            query.removeBinding(RdfCloudTripleStoreConfiguration.CONF_QUERY_AUTH);
         }
         if (infer) {
-            graphQuery.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(true));
+            query.setBinding(RdfCloudTripleStoreConfiguration.CONF_INFER, VALUE_FACTORY.createLiteral(true));
+        } else {
+            query.removeBinding(RdfCloudTripleStoreConfiguration.CONF_INFER);
         }
     }
 

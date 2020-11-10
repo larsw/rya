@@ -3,7 +3,7 @@ package org.apache.rya.web2.converters;
 import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
-import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLStarResultsJSONWriter;
+import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -38,7 +38,7 @@ public class SparqlJsonMessageConverter extends AbstractHttpMessageConverter<Tup
     @Override
     protected void writeInternal(TupleQueryResult result, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         OutputStream os = outputMessage.getBody();
-        SPARQLStarResultsJSONWriter writer = new SPARQLStarResultsJSONWriter(os);
+        SPARQLResultsJSONWriter writer = new SPARQLResultsJSONWriter(os);
         QueryResults.report(result, writer);
     }
 }
