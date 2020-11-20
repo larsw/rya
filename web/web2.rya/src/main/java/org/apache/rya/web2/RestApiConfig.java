@@ -14,9 +14,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.accept.FixedContentNegotiationStrategy;
 import org.springframework.web.accept.HeaderContentNegotiationStrategy;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.*;
 
@@ -25,6 +23,11 @@ public class RestApiConfig implements WebMvcConfigurer {
 
     @Value("${cors.allowedOrigins}")
     private String allowedOrigins;
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/web/**").addResourceLocations("classpath:/public/");
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

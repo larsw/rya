@@ -498,6 +498,11 @@ under the License.
                 <artifactId>rya.streams.kafka-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.rya</groupId>
+                <artifactId>frontend.web2.rya</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.thrift</groupId>
@@ -558,7 +563,7 @@ under the License.
                 <groupId>org.apache.rya</groupId>
                 <artifactId>rya.kafka.connect.mongo</artifactId>
                 <version>${project.version}</version>
-	    </dependency>
+	        </dependency>
             <dependency>
                 <groupId>org.apache.accumulo</groupId>
                 <artifactId>accumulo-core</artifactId>
