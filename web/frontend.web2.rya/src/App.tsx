@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import '@triply/yasgui/build/yasgui.min.css'
+import '@sral/yasgui/build/yasgui.min.css'
 import { UserData } from 'react-oidc'
 import { Form } from 'react-bootstrap'
 import { SparqlEditor } from './SparqlEditor'

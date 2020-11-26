@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Yasgui from '@triply/yasgui'
+import Yasgui from '@sral/yasgui'
 
 export const SparqlEditor = (props: any) => {
   useEffect(() => {
