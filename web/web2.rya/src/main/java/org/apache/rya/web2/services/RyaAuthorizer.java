@@ -44,9 +44,15 @@ public class RyaAuthorizer {
         }
         else if (claim instanceof String) {
             final String stringClaim = (String) claim;
-            authorizationsSet = Optional.of(Arrays.stream(stringClaim.split(",")).collect(Collectors.toSet()));
+            authorizationsSet = Optional.of(
+              Arrays.stream(stringClaim.split(","))
+                    .map(x -> x.replaceAll("/", "_"))
+                    .collect(Collectors.toSet()));
         } else if (claim instanceof List<?>) {
-            final List<String> listOfAuthorizations = Collections.unmodifiableList((List<String>) claim);
+            final List<String> listOfAuthorizations = Collections.unmodifiableList(((List<String>) claim)
+                   .stream()
+                   .map(x -> x.replaceAll("/", "_"))
+                   .collect(Collectors.toList()));
             authorizationsSet = Optional.of(new HashSet<>(listOfAuthorizations));
         } else {
             throw new UnsupportedOperationException("Unknown claim type: " + claim.getClass().getName());

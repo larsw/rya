@@ -30,12 +30,17 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${rya.sparql.api.clientId}")
     private String name;
 
+    @Value("${rya.sparql.security.scope:sparql}")
+    private String sparqlScopeName;
+
+    @Value("${web.enablecors:true}")
+    private Boolean enableCors;
+
     private static final CorsConfiguration corsConfiguration;
 
     static {
         corsConfiguration = new CorsConfiguration();
         corsConfiguration.applyPermitDefaultValues();
-//        corsConfiguration.addAllowedOrigin("https://ryaweb.localhost:8082");
         corsConfiguration.setAllowCredentials(true);
     }
 
@@ -54,12 +59,17 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .cors();//c -> c.configurationSource(x -> corsConfiguration));
+
+        http.csrf().disable();
+
+        if (enableCors) {
+            http.cors();
+        }
+
+        String scopeName = "SCOPE_" + sparqlScopeName;
         http.authorizeRequests(authz ->
                         authz.antMatchers(HttpMethod.GET, "/").permitAll()
-                             .antMatchers(HttpMethod.POST, "/sparql").hasAuthority("SCOPE_sparql"))
+                             .antMatchers(HttpMethod.POST, "/sparql").hasAuthority(scopeName))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
     }
 
